@@ -1,14 +1,11 @@
 package com.example.aklah.Network;
 
 
-import com.example.aklah.Model.IngredientPojo;
-import com.example.aklah.Model.Meal;
 import com.example.aklah.Model.Pojo;
 import com.example.aklah.Model.PojoIng;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface MealService {

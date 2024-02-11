@@ -4,19 +4,19 @@ import java.util.ArrayList;
 
 public class Pojo {
 
-    private ArrayList<MealPojo> meals;
+    private ArrayList<Meal> meals;
 
 
-    public Pojo(ArrayList<MealPojo> products) {
+    public Pojo(ArrayList<Meal> products) {
         this.meals = products;
     }
 
 
-    public ArrayList<MealPojo> getMeals() {
+    public ArrayList<Meal> getMeals() {
         return meals;
     }
 
-    public void setMeals(ArrayList<MealPojo> meals) {
+    public void setMeals(ArrayList<Meal> meals) {
         this.meals = meals;
     }
 }

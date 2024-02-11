@@ -1,8 +1,6 @@
 package com.example.aklah.Network;
 
 import com.example.aklah.Model.IngredientPojo;
-import com.example.aklah.Model.MealPojo;
-import com.example.aklah.Model.PojoIng;
 
 import java.util.ArrayList;
 
