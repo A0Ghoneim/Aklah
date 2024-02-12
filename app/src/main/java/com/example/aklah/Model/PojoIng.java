@@ -6,19 +6,19 @@ import java.util.ArrayList;
 
 public class PojoIng {
     @SerializedName("meals")
-    private ArrayList<IngredientPojo> ingredients;
+    private ArrayList<Ingredient> ingredients;
 
 
-    public PojoIng(ArrayList<IngredientPojo> ingredients) {
+    public PojoIng(ArrayList<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 
 
-    public ArrayList<IngredientPojo> getIngredients() {
+    public ArrayList<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(ArrayList<IngredientPojo> ingredients) {
+    public void setIngredients(ArrayList<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 }

@@ -2,12 +2,12 @@ package com.example.aklah.Model;
 
 import java.util.ArrayList;
 
-public class Pojo {
+public class PojoMeal {
 
     private ArrayList<Meal> meals;
 
 
-    public Pojo(ArrayList<Meal> products) {
+    public PojoMeal(ArrayList<Meal> products) {
         this.meals = products;
     }
 

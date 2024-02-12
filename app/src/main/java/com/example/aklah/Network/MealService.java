@@ -1,7 +1,9 @@
 package com.example.aklah.Network;
 
 
-import com.example.aklah.Model.Pojo;
+import com.example.aklah.Model.PojoCategory;
+import com.example.aklah.Model.PojoCountry;
+import com.example.aklah.Model.PojoMeal;
 import com.example.aklah.Model.PojoIng;
 
 import retrofit2.Call;
@@ -10,24 +12,24 @@ import retrofit2.http.Query;
 
 public interface MealService {
     @GET("search.php")
-    Call<Pojo> getMealsThatContain(@Query("s") String name);
+    Call<PojoMeal> getMealsThatContain(@Query("s") String name);
     @GET("lookup.php")
-    Call<Pojo> getMealById(@Query("i") String id);
+    Call<PojoMeal> getMealById(@Query("i") String id);
     @GET("random.php")
-    Call<Pojo> getRandomMeal();
+    Call<PojoMeal> getRandomMeal();
 
-    @GET("list.php?c=list")
-    Call<Pojo> getAllCategories();
+    @GET("categories.php")
+    Call<PojoCategory> getAllCategories();
     @GET("list.php?a=list")
-    Call<Pojo> getAllCountries();
+    Call<PojoCountry> getAllCountries();
     @GET("list.php?i=list")
     Call<PojoIng> getAllIngredients();
 
     @GET("filter.php")
-    Call<Pojo> getMealsInCategory(@Query("c") String category);
+    Call<PojoMeal> getMealsInCategory(@Query("c") String category);
     @GET("filter.php")
-    Call<Pojo> getMealsInCountry(@Query("a") String country);
+    Call<PojoMeal> getMealsInCountry(@Query("a") String country);
     @GET("filter.php")
-    Call<Pojo> getMealsWithIngredient(@Query("i") String ingredient);
+    Call<PojoMeal> getMealsWithIngredient(@Query("i") String ingredient);
 
 }

@@ -15,7 +15,7 @@ public interface MealDAO {
     @Query("Select * from Meal where favourite = true")
     LiveData<List<Meal>> getFavouriteMeals();
     @Query("Select * from Meal where idMeal =:id")
-    LiveData<Meal> getMealById(int id);
+    LiveData<Meal> getMealById(String id);
     @Insert
     void insertProduct(Meal meal);
     @Delete

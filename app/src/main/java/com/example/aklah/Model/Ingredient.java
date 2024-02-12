@@ -1,13 +1,13 @@
 package com.example.aklah.Model;
 
-public class IngredientPojo {
-    public String idIngredient;
-    public String strIngredient;
+public class Ingredient {
+    private String idIngredient;
+    private String strIngredient;
 
-    public IngredientPojo() {
+    public Ingredient() {
     }
 
-    public IngredientPojo(String idIngredient, String strIngredient) {
+    public Ingredient(String idIngredient, String strIngredient) {
         this.idIngredient = idIngredient;
         this.strIngredient = strIngredient;
     }

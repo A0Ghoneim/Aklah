@@ -14,11 +14,14 @@ public class MealLocalDataSourceImp implements MealLocalDataSource {
     private MealDAO dao;
     private LiveData<List<Meal>> favouriteMeals;
 
+    private LiveData<Meal> requestedMeal;
+
     private static MealLocalDataSource mealLocalDataSource = null;
     private MealLocalDataSourceImp(Context context){
         this.context=context;
          dao = AppDataBase.getInstance(context).getMealDAO();
          favouriteMeals =dao.getFavouriteMeals();
+
 
     }
     public static MealLocalDataSource getInstance(Context context){
@@ -31,6 +34,13 @@ public class MealLocalDataSourceImp implements MealLocalDataSource {
     public LiveData<List<Meal>> getFavouriteMeals(){
         return favouriteMeals;
     }
+    @Override
+    public LiveData<Meal> getMealById(String id) {
+        requestedMeal =dao.getMealById(id);
+        return requestedMeal;
+    }
+
+
     @Override
     public void delete(Meal meal){
         new Thread(){

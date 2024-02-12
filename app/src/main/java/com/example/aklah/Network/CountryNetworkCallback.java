@@ -1,10 +1,10 @@
 package com.example.aklah.Network;
 
-import com.example.aklah.Model.Meal;
+import com.example.aklah.Model.Country;
 
 import java.util.ArrayList;
 
 public interface CountryNetworkCallback {
-    public void onSuccessResult(ArrayList<Meal> countriesOnly);
-    public void onFaliureResult(String errormsg);
+     void onSuccessResult(ArrayList<Country> countries);
+     void onFaliureResult(String errormsg);
 }
