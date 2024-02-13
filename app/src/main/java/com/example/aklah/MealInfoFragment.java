@@ -185,6 +185,7 @@ public class MealInfoFragment extends Fragment {
             else {
                 break;
             }
+            // coo
             if (!meal.getStrIngredient7().equals("")) {
                 recipeIngredients.add(meal.getStrIngredient7());
                 recipeMeasures.add(meal.getStrMeasure7());            }
