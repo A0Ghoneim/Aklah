@@ -7,4 +7,6 @@
     <string name="schedule">schedule</string>
     <string name="favourite">favourite</string>
     <string name="mealOfTheDay">Meal of the day</string>
+    <string name="recipr">Recipe</string>
+    <string name="ingredients">Ingredients</string>
 </resources>
