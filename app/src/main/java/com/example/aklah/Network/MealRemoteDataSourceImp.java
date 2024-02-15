@@ -99,12 +99,12 @@ public class MealRemoteDataSourceImp implements MealRemoteDataSource {
                 mealService.getAllCountries().enqueue(new Callback<PojoCountry>() {
                     @Override
                     public void onResponse(Call<PojoCountry> call, Response<PojoCountry> response) {
-                        countryNetworkCallback.onSuccessResult(response.body().getCountries());
+                        countryNetworkCallback.onSuccessResultCountry(response.body().getCountries());
                     }
 
                     @Override
                     public void onFailure(Call<PojoCountry> call, Throwable t) {
-                        countryNetworkCallback.onFaliureResult(t.getMessage());
+                        countryNetworkCallback.onFaliureResultCountry(t.getMessage());
                     }
                 });
     }

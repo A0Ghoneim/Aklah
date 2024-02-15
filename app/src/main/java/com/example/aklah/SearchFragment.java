@@ -2,63 +2,172 @@ package com.example.aklah;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SearchFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class SearchFragment extends Fragment {
+import com.example.aklah.Model.Category;
+import com.example.aklah.Model.Country;
+import com.example.aklah.Model.Database.MealLocalDataSourceImp;
+import com.example.aklah.Model.MealRepositoryImp;
+import com.example.aklah.Network.MealRemoteDataSourceImp;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import org.checkerframework.checker.units.qual.C;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+import java.util.ArrayList;
+import java.util.List;
 
-    public SearchFragment() {
-        // Required empty public constructor
-    }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SearchFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SearchFragment newInstance(String param1, String param2) {
-        SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+public class SearchFragment extends Fragment implements MySearchView {
+
+    SearchPresenter searchPresenter;
+
+    RecyclerView categoryRecyclerView;
+
+    RecyclerView countryRecyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        searchPresenter = new SearchPresenterImp(this, MealRepositoryImp.getInstance(MealRemoteDataSourceImp.getInstance(), MealLocalDataSourceImp.getInstance(getActivity())));
+        searchPresenter.getCategories();
+        searchPresenter.getCountries();
         return inflater.inflate(R.layout.fragment_search, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        categoryRecyclerView=view.findViewById(R.id.recyclerView);
+        countryRecyclerView=view.findViewById(R.id.recycler_countries);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),2,GridLayoutManager.VERTICAL,false);
+        GridLayoutManager gridLayoutManager2 = new GridLayoutManager(getActivity(),2,GridLayoutManager.VERTICAL,false);
+
+        //  LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+      //  linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        categoryRecyclerView.setLayoutManager(gridLayoutManager);
+        countryRecyclerView.setLayoutManager(gridLayoutManager2);
+
+    }
+
+    @Override
+    public void getCategories(ArrayList<Category> categories) {
+        CategoryAdapter categoryAdapter = new CategoryAdapter(getActivity(),categories);
+        categoryRecyclerView.setAdapter(categoryAdapter);
+    }
+
+    @Override
+    public void getCountries(ArrayList<Country> countries) {
+        ArrayList<Country> codedCountries = addcodes(countries);
+        codedCountries.removeIf(country -> country.getStrArea().equals("Unknown"));
+        CountryAdapter countryAdapter = new CountryAdapter(getActivity(),codedCountries);
+        countryRecyclerView.setAdapter(countryAdapter);
+    }
+
+    private ArrayList<Country> addcodes(ArrayList<Country> countries) {
+        for (int i = 0; i < countries.size(); i++) {
+            Country curr = countries.get(i);
+            switch (curr.getStrArea()){
+                case "American":
+                    curr.setCode("us");
+                    break;
+                case "British":
+                    curr.setCode("gb");
+                    break;
+                case "Canadian":
+                    curr.setCode("ca");
+                    break;
+                case "Chinese":
+                    curr.setCode("cn");
+                    break;
+                case "Croatian":
+                    curr.setCode("hr");
+                    break;
+                case "Dutch":
+                    curr.setCode("de");
+                    break;
+                case "Egyptian":
+                    curr.setCode("eg");
+                    break;
+                case "Filipino":
+                    curr.setCode("ph");
+                    break;
+                case "French":
+                    curr.setCode("fr");
+                    break;
+                case "Greek":
+                    curr.setCode("gr");
+                    break;
+                case "Indian":
+                    curr.setCode("in");
+                    break;
+                case "Irish":
+                    curr.setCode("ie");
+                    break;
+                case "Italian":
+                    curr.setCode("it");
+                    break;
+                case "Jamaican":
+                    curr.setCode("jm");
+                    break;
+                case "Japanese":
+                    curr.setCode("jp");
+                    break;
+                case "Kenyan":
+                    curr.setCode("ke");
+                    break;
+                case "Malaysian":
+                    curr.setCode("my");
+                    break;
+                case "Mexican":
+                    curr.setCode("mx");
+                    break;
+                case "Moroccan":
+                    curr.setCode("ma");
+                    break;
+                case "Polish":
+                    curr.setCode("pl");
+                    break;
+                case "Portuguese":
+                    curr.setCode("pt");
+                    break;
+                case "Russian":
+                    curr.setCode("ru");
+                    break;
+                case "Spanish":
+                    curr.setCode("es");
+                    break;
+                case "Thai":
+                    curr.setCode("th");
+                    break;
+                case "Tunisian":
+                    curr.setCode("tn");
+                    break;
+                case "Turkish":
+                    curr.setCode("tr");
+                    break;
+                case "Vietnamese":
+                    curr.setCode("vn");
+            }
+        }
+        return countries;
+    }
+
+    @Override
+    public void showErrorMsg(String error) {
+
     }
 }

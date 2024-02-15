@@ -9,4 +9,6 @@
     <string name="mealOfTheDay">Meal of the day</string>
     <string name="recipr">Recipe</string>
     <string name="ingredients">Ingredients</string>
+    <string name="categories">Categories</string>
+    <string name="countries">Countries</string>
 </resources>
