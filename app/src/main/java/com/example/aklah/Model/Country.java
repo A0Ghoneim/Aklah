@@ -1,6 +1,8 @@
 package com.example.aklah.Model;
 
-public class Country {
+import java.io.Serializable;
+
+public class Country implements Serializable {
     private String strArea;
 
     private String code;

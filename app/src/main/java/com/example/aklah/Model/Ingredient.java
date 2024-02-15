@@ -1,6 +1,8 @@
 package com.example.aklah.Model;
 
-public class Ingredient {
+import java.io.Serializable;
+
+public class Ingredient implements Serializable {
     private String idIngredient;
     private String strIngredient;
 

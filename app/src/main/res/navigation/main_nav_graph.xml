@@ -20,8 +20,17 @@
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" >
         <action
-            android:id="@+id/action_searchFragment_to_mealInfoFragment"
-            app:destination="@id/mealInfoFragment" />
+            android:id="@+id/action_searchFragment_to_categorySearchFragment"
+            app:destination="@id/categorySearchFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_countrySearchFragment"
+            app:destination="@id/countrySearchFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_ingredientSearchFragment"
+            app:destination="@id/ingredientSearchFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_mealSearchFragment22"
+            app:destination="@id/mealSearchFragment2" />
     </fragment>
     <fragment
         android:id="@+id/favouriteFragment"
@@ -49,6 +58,59 @@
         <argument
             android:name="MealData"
             app:argType="com.example.aklah.Model.Meal"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/categorySearchFragment"
+        android:name="com.example.aklah.CategorySearchFragment"
+        android:label="fragment_category_search"
+        tools:layout="@layout/fragment_category_search" >
+        <argument
+            android:name="AllCategories"
+            app:argType="com.example.aklah.Model.PojoCategory"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_categorySearchFragment_to_mealSearchFragment2"
+            app:destination="@id/mealSearchFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/countrySearchFragment"
+        android:name="com.example.aklah.CountrySearchFragment"
+        android:label="fragment_country_search"
+        tools:layout="@layout/fragment_country_search" >
+        <action
+            android:id="@+id/action_countrySearchFragment_to_mealSearchFragment2"
+            app:destination="@id/mealSearchFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/ingredientSearchFragment"
+        android:name="com.example.aklah.IngredientSearchFragment"
+        android:label="fragment_ingredient_search"
+        tools:layout="@layout/fragment_ingredient_search" >
+        <action
+            android:id="@+id/action_ingredientSearchFragment_to_mealSearchFragment2"
+            app:destination="@id/mealSearchFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/mealSearchFragment2"
+        android:name="com.example.aklah.MealSearchFragment"
+        android:label="fragment_meal_search"
+        tools:layout="@layout/fragment_meal_search" >
+        <argument
+            android:name="catrgory"
+            app:argType="com.example.aklah.Model.Category"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="Country"
+            app:argType="com.example.aklah.Model.Country"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="Ingredirnt"
+            app:argType="com.example.aklah.Model.Ingredient"
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>

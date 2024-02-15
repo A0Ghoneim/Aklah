@@ -20,10 +20,7 @@ import com.example.aklah.Model.Ingredient;
 import com.example.aklah.Model.MealRepositoryImp;
 import com.example.aklah.Network.MealRemoteDataSourceImp;
 
-import org.checkerframework.checker.units.qual.C;
-
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class SearchFragment extends Fragment implements MySearchView {
@@ -34,7 +31,7 @@ public class SearchFragment extends Fragment implements MySearchView {
 
     RecyclerView countryRecyclerView;
 
-    RecyclerView ingredientRrcyclerView;
+    RecyclerView ingredientRecyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,7 +54,7 @@ public class SearchFragment extends Fragment implements MySearchView {
         super.onViewCreated(view, savedInstanceState);
         categoryRecyclerView=view.findViewById(R.id.recyclerView);
         countryRecyclerView=view.findViewById(R.id.recycler_countries);
-        ingredientRrcyclerView=view.findViewById(R.id.ingredients_recycler);
+        ingredientRecyclerView =view.findViewById(R.id.ingredients_recycler);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),3,GridLayoutManager.HORIZONTAL,false){
             @Override
             public boolean canScrollVertically() {
@@ -77,19 +74,19 @@ public class SearchFragment extends Fragment implements MySearchView {
       //  linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         categoryRecyclerView.setLayoutManager(gridLayoutManager);
         countryRecyclerView.setLayoutManager(gridLayoutManager2);
-        ingredientRrcyclerView.setLayoutManager(linearLayoutManager);
+        ingredientRecyclerView.setLayoutManager(linearLayoutManager);
 
     }
 
     @Override
     public void getCategories(ArrayList<Category> categories) {
-        ArrayList<Category> categoriesSample = new ArrayList<>(categories.subList(0,8));
-        categoriesSample.add(new Category("99","View More","aaa"));
+       // ArrayList<Category> categoriesSample = new ArrayList<>(categories.subList(0,8));
+        //categoriesSample.add(new Category("99","View More","aaa"));
         final float scale = getContext().getResources().getDisplayMetrics().density;
         int hpixels = (int) (50*categories.size() * scale + 0.5f);
         int wpixels = (int) (390 * scale + 0.5f);
        // categoryRecyclerView.setLayoutParams(new RecyclerView.LayoutParams(wpixels,hpixels));
-        CategoryAdapter categoryAdapter = new CategoryAdapter(getActivity(),categoriesSample);
+        CategoryAdapter categoryAdapter = new CategoryAdapter(getActivity(),categories,1,R.layout.category_list_row);
         categoryRecyclerView.setAdapter(categoryAdapter);
     }
 
@@ -106,7 +103,7 @@ public class SearchFragment extends Fragment implements MySearchView {
     public void getIngredients(ArrayList<Ingredient> ingredients) {
         ArrayList<Ingredient> ingredientsSample = new ArrayList<>(ingredients.subList(0,10));
         IngredientAdapter ingredientAdapter = new IngredientAdapter(getActivity(),ingredientsSample);
-        ingredientRrcyclerView.setAdapter(ingredientAdapter);
+        ingredientRecyclerView.setAdapter(ingredientAdapter);
 
     }
 
