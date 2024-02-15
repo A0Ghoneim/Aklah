@@ -6,30 +6,31 @@ import com.example.aklah.Model.PojoCountry;
 import com.example.aklah.Model.PojoMeal;
 import com.example.aklah.Model.PojoIng;
 
+import io.reactivex.rxjava3.core.Single;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface MealService {
     @GET("search.php")
-    Call<PojoMeal> getMealsThatContain(@Query("s") String name);
+    Single<PojoMeal> getMealsThatContain(@Query("s") String name);
     @GET("lookup.php")
-    Call<PojoMeal> getMealById(@Query("i") String id);
+    Single<PojoMeal> getMealById(@Query("i") String id);
     @GET("random.php")
-    Call<PojoMeal> getRandomMeal();
+    Single<PojoMeal> getRandomMeal();
 
     @GET("categories.php")
-    Call<PojoCategory> getAllCategories();
+    Single<PojoCategory> getAllCategories();
     @GET("list.php?a=list")
-    Call<PojoCountry> getAllCountries();
+    Single<PojoCountry> getAllCountries();
     @GET("list.php?i=list")
-    Call<PojoIng> getAllIngredients();
+    Single<PojoIng> getAllIngredients();
 
     @GET("filter.php")
-    Call<PojoMeal> getMealsInCategory(@Query("c") String category);
+    Single<PojoMeal> getMealsInCategory(@Query("c") String category);
     @GET("filter.php")
-    Call<PojoMeal> getMealsInCountry(@Query("a") String country);
+    Single<PojoMeal> getMealsInCountry(@Query("a") String country);
     @GET("filter.php")
-    Call<PojoMeal> getMealsWithIngredient(@Query("i") String ingredient);
+    Single<PojoMeal> getMealsWithIngredient(@Query("i") String ingredient);
 
 }

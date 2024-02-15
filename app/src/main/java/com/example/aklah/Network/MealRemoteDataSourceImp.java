@@ -1,5 +1,6 @@
 package com.example.aklah.Network;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.example.aklah.Model.PojoCategory;
@@ -7,10 +8,14 @@ import com.example.aklah.Model.PojoCountry;
 import com.example.aklah.Model.PojoMeal;
 import com.example.aklah.Model.PojoIng;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MealRemoteDataSourceImp implements MealRemoteDataSource {
@@ -18,7 +23,7 @@ public class MealRemoteDataSourceImp implements MealRemoteDataSource {
     public static final String BASE_URL = "https://www.themealdb.com/api/json/v1/1/";
 
     private MealRemoteDataSourceImp() {
-        retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
+        retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).addCallAdapterFactory(RxJava3CallAdapterFactory.create()).build();
         mealService = retrofit.create(MealService.class);
     }
 
@@ -36,138 +41,65 @@ public class MealRemoteDataSourceImp implements MealRemoteDataSource {
 
     @Override
     public void getMealsThatContainNetworkCall(MealNetworkCallback mealNetworkCallback, String name) {
-        mealService.getMealsThatContain(name).enqueue(new Callback<PojoMeal>() {
-            @Override
-            public void onResponse(Call<PojoMeal> call, Response<PojoMeal> response) {
-                mealNetworkCallback.onSuccessResult(response.body().getMeals());
-            }
-
-            @Override
-            public void onFailure(Call<PojoMeal> call, Throwable t) {
-                mealNetworkCallback.onFaliureResult(t.getMessage());
-            }
-        });
+        mealService.getMealsThatContain(name)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(pojoMeal -> mealNetworkCallback.onSuccessResult(pojoMeal.getMeals()),throwable ->mealNetworkCallback.onFaliureResult(throwable.getMessage()));
     }
 
     @Override
     public void getMealByIdNetworkCall(MealNetworkCallback mealNetworkCallback, String id) {
-                mealService.getMealById(id).enqueue(new Callback<PojoMeal>() {
-                    @Override
-                    public void onResponse(Call<PojoMeal> call, Response<PojoMeal> response) {
-                        mealNetworkCallback.onSuccessResult(response.body().getMeals());
-                    }
-
-                    @Override
-                    public void onFailure(Call<PojoMeal> call, Throwable t) {
-                        mealNetworkCallback.onFaliureResult(t.getMessage());
-                    }
-                });
+                mealService.getMealById(id).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(pojoMeal -> mealNetworkCallback.onSuccessResult(pojoMeal.getMeals()),throwable ->mealNetworkCallback.onFaliureResult(throwable.getMessage()));
     }
 
     @Override
     public void getRandomMealNetworkCall(MealNetworkCallback mealNetworkCallback) {
-                mealService.getRandomMeal().enqueue(new Callback<PojoMeal>() {
-                    @Override
-                    public void onResponse(Call<PojoMeal> call, Response<PojoMeal> response) {
-                        mealNetworkCallback.onSuccessResult(response.body().getMeals());
-                    }
-
-                    @Override
-                    public void onFailure(Call<PojoMeal> call, Throwable t) {
-                        mealNetworkCallback.onFaliureResult(t.getMessage());
-                    }
-                });
+                mealService.getRandomMeal().subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(pojoMeal -> mealNetworkCallback.onSuccessResult(pojoMeal.getMeals()),throwable ->mealNetworkCallback.onFaliureResult(throwable.getMessage()));
     }
 
     @Override
     public void getAllCategoriesNetworkCall(CategoryNetworkCallback categoryNetworkCallback) {
-                mealService.getAllCategories().enqueue(new Callback<PojoCategory>() {
-                    @Override
-                    public void onResponse(Call<PojoCategory> call, Response<PojoCategory> response) {
-                        categoryNetworkCallback.onSuccessResult(response.body().getCategories());
-                    }
-
-                    @Override
-                    public void onFailure(Call<PojoCategory> call, Throwable t) {
-                        categoryNetworkCallback.onFaliureResult(t.getMessage());
-                    }
-                });
+                mealService.getAllCategories().subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(pojoCategory -> categoryNetworkCallback.onSuccessResult(pojoCategory.getCategories()),throwable -> categoryNetworkCallback.onFaliureResult(throwable.getMessage()));
     }
 
     @Override
     public void getAllCountriesNetworkCall(CountryNetworkCallback countryNetworkCallback) {
-                mealService.getAllCountries().enqueue(new Callback<PojoCountry>() {
-                    @Override
-                    public void onResponse(Call<PojoCountry> call, Response<PojoCountry> response) {
-                        countryNetworkCallback.onSuccessResultCountry(response.body().getCountries());
-                    }
-
-                    @Override
-                    public void onFailure(Call<PojoCountry> call, Throwable t) {
-                        countryNetworkCallback.onFaliureResultCountry(t.getMessage());
-                    }
-                });
+                mealService.getAllCountries().subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(pojoCountry -> countryNetworkCallback.onSuccessResultCountry(pojoCountry.getCountries()),throwable -> countryNetworkCallback.onFaliureResultCountry(throwable.getMessage()));
     }
 
     @Override
     public void getAllIngredientsNetworkCall(IngredientNetworkCallback ingredientNetworkCallback) {
-                mealService.getAllIngredients().enqueue(new Callback<PojoIng>() {
-                    @Override
-                    public void onResponse(Call<PojoIng> call, Response<PojoIng> response) {
-                        Log.i("TAG", "onResponse: "+response.toString());
-                        Log.i("TAG", "onResponse: "+response.body().toString());
-                        ingredientNetworkCallback.onSuccessResult(response.body().getIngredients());
-                    }
-
-                    @Override
-                    public void onFailure(Call<PojoIng> call, Throwable t) {
-                        ingredientNetworkCallback.onFaliureResult(t.getMessage());
-                    }
-                });
+                mealService.getAllIngredients().subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(pojoIng -> ingredientNetworkCallback.onSuccessResult(pojoIng.getIngredients()),throwable -> ingredientNetworkCallback.onFaliureResult(throwable.getMessage()) );
     }
 
     @Override
     public void getMealsInCategoryNetworkCall(MealNetworkCallback mealNetworkCallback, String category) {
-                mealService.getMealsInCategory(category).enqueue(new Callback<PojoMeal>() {
-                    @Override
-                    public void onResponse(Call<PojoMeal> call, Response<PojoMeal> response) {
-                        mealNetworkCallback.onSuccessResult(response.body().getMeals());
-                    }
-
-                    @Override
-                    public void onFailure(Call<PojoMeal> call, Throwable t) {
-                        mealNetworkCallback.onFaliureResult(t.getMessage());
-                    }
-                });
+                mealService.getMealsInCategory(category).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(pojoMeal -> mealNetworkCallback.onSuccessResult(pojoMeal.getMeals()),throwable ->mealNetworkCallback.onFaliureResult(throwable.getMessage()));
     }
 
     @Override
     public void getMealsInCountryNetworkCall(MealNetworkCallback mealNetworkCallback, String country) {
-                mealService.getMealsInCountry(country).enqueue(new Callback<PojoMeal>() {
-                    @Override
-                    public void onResponse(Call<PojoMeal> call, Response<PojoMeal> response) {
-                        mealNetworkCallback.onSuccessResult(response.body().getMeals());
-                    }
-
-                    @Override
-                    public void onFailure(Call<PojoMeal> call, Throwable t) {
-                        mealNetworkCallback.onFaliureResult(t.getMessage());
-                    }
-                });
+                mealService.getMealsInCountry(country).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(pojoMeal -> mealNetworkCallback.onSuccessResult(pojoMeal.getMeals()),throwable ->mealNetworkCallback.onFaliureResult(throwable.getMessage()));
     }
 
     @Override
     public void getMealsWithIngredientNetworkCall(MealNetworkCallback mealNetworkCallback, String ingredient) {
-                mealService.getMealsWithIngredient(ingredient).enqueue(new Callback<PojoMeal>() {
-                    @Override
-                    public void onResponse(Call<PojoMeal> call, Response<PojoMeal> response) {
-                        mealNetworkCallback.onSuccessResult(response.body().getMeals());
-                    }
-
-                    @Override
-                    public void onFailure(Call<PojoMeal> call, Throwable t) {
-                        mealNetworkCallback.onFaliureResult(t.getMessage());
-                    }
-                });
+                mealService.getMealsWithIngredient(ingredient).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(pojoMeal -> mealNetworkCallback.onSuccessResult(pojoMeal.getMeals()),throwable ->mealNetworkCallback.onFaliureResult(throwable.getMessage()));
     }
 }
