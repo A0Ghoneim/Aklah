@@ -79,7 +79,7 @@ public class MealRemoteDataSourceImp implements MealRemoteDataSource {
     public void getAllIngredientsNetworkCall(IngredientNetworkCallback ingredientNetworkCallback) {
                 mealService.getAllIngredients().subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(pojoIng -> ingredientNetworkCallback.onSuccessResult(pojoIng.getIngredients()),throwable -> ingredientNetworkCallback.onFaliureResult(throwable.getMessage()) );
+                        .subscribe(pojoIng -> ingredientNetworkCallback.onSuccessResultIngredient(pojoIng.getIngredients()),throwable -> ingredientNetworkCallback.onFaliureResult(throwable.getMessage()) );
     }
 
     @Override

@@ -14,49 +14,46 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.aklah.Model.Category;
+import com.example.aklah.Model.Ingredient;
 
 import java.util.ArrayList;
 
-public class CategoryAdapter extends RecyclerView.Adapter<
-        CategoryAdapter.ViewHolder> {
+public class IngredientAdapter extends RecyclerView.Adapter<
+        IngredientAdapter.ViewHolder> {
 
     private Context context;
-    private ArrayList<Category> categories;
+    private ArrayList<Ingredient> ingredients;
 
 
 
-    public CategoryAdapter(Context context, ArrayList<Category> categories) {
+    public IngredientAdapter(Context context, ArrayList<Ingredient> ingredients) {
         this.context = context;
-        this.categories = categories;
+        this.ingredients = ingredients;
     }
 
-    public void setCategories(ArrayList<Category> categories) {
-        this.categories = categories;
+    public void setIngredients(ArrayList<Ingredient> ingredients) {
+        this.ingredients = ingredients;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View v=layoutInflater.inflate(R.layout.category_list_row,parent,false);
+        View v=layoutInflater.inflate(R.layout.ingredient_list_row,parent,false);
         ViewHolder viewHolder = new ViewHolder(v);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.nameView.setText(categories.get(position).getStrCategory());
-        if (categories.get(position).getStrCategoryThumb().equals("aaa")){
-            holder.imageView.setImageResource(R.drawable.manyyfood);
-        }
-        else {
-            Glide.with(context).load(categories.get(position).getStrCategoryThumb()).apply(new RequestOptions().override(100, 100)).into(holder.imageView);
-        }
+        holder.nameView.setText(ingredients.get(position).getStrIngredient());
+        String link = "https://www.themealdb.com/images/ingredients/"+ingredients.get(position).getStrIngredient()+".png";
+        Glide.with(context).load(link).apply(new RequestOptions().override(100, 100)).into(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return categories.size();
+        return ingredients.size();
     }
 
 
@@ -69,9 +66,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             layout=itemView;
-            nameView = itemView.findViewById(R.id.category_name);
-            imageView = itemView.findViewById(R.id.category_img);
-            constraintLayout= itemView.findViewById(R.id.category_view);
+            nameView = itemView.findViewById(R.id.ingredient_name);
+            imageView = itemView.findViewById(R.id.ingredient_img);
+            constraintLayout= itemView.findViewById(R.id.ingredient_view);
 
         }
     }

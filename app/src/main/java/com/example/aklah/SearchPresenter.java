@@ -5,4 +5,6 @@ public interface SearchPresenter {
 
      void getCountries();
 
+     void getIngredients();
+
 }

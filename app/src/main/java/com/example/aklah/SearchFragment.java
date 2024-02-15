@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.example.aklah.Model.Category;
 import com.example.aklah.Model.Country;
 import com.example.aklah.Model.Database.MealLocalDataSourceImp;
+import com.example.aklah.Model.Ingredient;
 import com.example.aklah.Model.MealRepositoryImp;
 import com.example.aklah.Network.MealRemoteDataSourceImp;
 
@@ -33,6 +34,8 @@ public class SearchFragment extends Fragment implements MySearchView {
 
     RecyclerView countryRecyclerView;
 
+    RecyclerView ingredientRrcyclerView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +48,7 @@ public class SearchFragment extends Fragment implements MySearchView {
         searchPresenter = new SearchPresenterImp(this, MealRepositoryImp.getInstance(MealRemoteDataSourceImp.getInstance(), MealLocalDataSourceImp.getInstance(getActivity())));
         searchPresenter.getCategories();
         searchPresenter.getCountries();
+        searchPresenter.getIngredients();
         return inflater.inflate(R.layout.fragment_search, container, false);
     }
 
@@ -53,19 +57,39 @@ public class SearchFragment extends Fragment implements MySearchView {
         super.onViewCreated(view, savedInstanceState);
         categoryRecyclerView=view.findViewById(R.id.recyclerView);
         countryRecyclerView=view.findViewById(R.id.recycler_countries);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),2,GridLayoutManager.VERTICAL,false);
-        GridLayoutManager gridLayoutManager2 = new GridLayoutManager(getActivity(),2,GridLayoutManager.VERTICAL,false);
+        ingredientRrcyclerView=view.findViewById(R.id.ingredients_recycler);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),3,GridLayoutManager.HORIZONTAL,false){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+
+            @Override
+            public boolean canScrollHorizontally() {
+                return false;
+            }
+        };
+        GridLayoutManager gridLayoutManager2 = new GridLayoutManager(getActivity(),2,GridLayoutManager.HORIZONTAL,false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
+
 
         //  LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
       //  linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         categoryRecyclerView.setLayoutManager(gridLayoutManager);
         countryRecyclerView.setLayoutManager(gridLayoutManager2);
+        ingredientRrcyclerView.setLayoutManager(linearLayoutManager);
 
     }
 
     @Override
     public void getCategories(ArrayList<Category> categories) {
-        CategoryAdapter categoryAdapter = new CategoryAdapter(getActivity(),categories);
+        ArrayList<Category> categoriesSample = new ArrayList<>(categories.subList(0,8));
+        categoriesSample.add(new Category("99","View More","aaa"));
+        final float scale = getContext().getResources().getDisplayMetrics().density;
+        int hpixels = (int) (50*categories.size() * scale + 0.5f);
+        int wpixels = (int) (390 * scale + 0.5f);
+       // categoryRecyclerView.setLayoutParams(new RecyclerView.LayoutParams(wpixels,hpixels));
+        CategoryAdapter categoryAdapter = new CategoryAdapter(getActivity(),categoriesSample);
         categoryRecyclerView.setAdapter(categoryAdapter);
     }
 
@@ -73,8 +97,17 @@ public class SearchFragment extends Fragment implements MySearchView {
     public void getCountries(ArrayList<Country> countries) {
         ArrayList<Country> codedCountries = addcodes(countries);
         codedCountries.removeIf(country -> country.getStrArea().equals("Unknown"));
-        CountryAdapter countryAdapter = new CountryAdapter(getActivity(),codedCountries);
+        ArrayList<Country> countrySample = new ArrayList<>(codedCountries.subList(0,10));
+        CountryAdapter countryAdapter = new CountryAdapter(getActivity(),countrySample);
         countryRecyclerView.setAdapter(countryAdapter);
+    }
+
+    @Override
+    public void getIngredients(ArrayList<Ingredient> ingredients) {
+        ArrayList<Ingredient> ingredientsSample = new ArrayList<>(ingredients.subList(0,10));
+        IngredientAdapter ingredientAdapter = new IngredientAdapter(getActivity(),ingredientsSample);
+        ingredientRrcyclerView.setAdapter(ingredientAdapter);
+
     }
 
     private ArrayList<Country> addcodes(ArrayList<Country> countries) {

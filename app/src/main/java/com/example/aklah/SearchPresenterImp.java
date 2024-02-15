@@ -2,13 +2,15 @@ package com.example.aklah;
 
 import com.example.aklah.Model.Category;
 import com.example.aklah.Model.Country;
+import com.example.aklah.Model.Ingredient;
 import com.example.aklah.Model.MealRepository;
 import com.example.aklah.Network.CategoryNetworkCallback;
 import com.example.aklah.Network.CountryNetworkCallback;
+import com.example.aklah.Network.IngredientNetworkCallback;
 
 import java.util.ArrayList;
 
-public class SearchPresenterImp implements SearchPresenter, CategoryNetworkCallback, CountryNetworkCallback {
+public class SearchPresenterImp implements SearchPresenter, CategoryNetworkCallback, CountryNetworkCallback , IngredientNetworkCallback {
 
     MySearchView view;
 
@@ -30,10 +32,20 @@ public class SearchPresenterImp implements SearchPresenter, CategoryNetworkCallb
     }
 
     @Override
+    public void getIngredients() {
+        repo.getAllIngredients(this);
+    }
+
+    @Override
     public void onSuccessResult(ArrayList<Category> categories) {
         view.getCategories(categories);
     }
 
+
+    @Override
+    public void onSuccessResultIngredient(ArrayList<Ingredient> ingredients) {
+        view.getIngredients(ingredients);
+    }
 
     @Override
     public void onFaliureResult(String errormsg) {

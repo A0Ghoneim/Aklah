@@ -36,7 +36,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.ViewHold
     @Override
     public CountryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View v=layoutInflater.inflate(R.layout.category_list_row,parent,false);
+        View v=layoutInflater.inflate(R.layout.country_list_row,parent,false);
         CountryAdapter.ViewHolder viewHolder = new CountryAdapter.ViewHolder(v);
         return viewHolder;
     }
@@ -48,7 +48,7 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.ViewHold
         holder.nameView.setText(countries.get(position).getStrArea());
         //String link = "https://flagsapi.com/"+countries.get(position)+"/flat/64.png";
         String link = "https://flagcdn.com/w160/"+countries.get(position).getCode()+".png";
-        Glide.with(context).load(link).apply(new RequestOptions().override(100,100)).into(holder.imageView);
+        Glide.with(context).load(link).apply(new RequestOptions().override(100,50)).into(holder.imageView);
     }
 
     @Override
@@ -65,9 +65,9 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.ViewHold
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             layout=itemView;
-            nameView = itemView.findViewById(R.id.category_name);
-            imageView = itemView.findViewById(R.id.category_img);
-            constraintLayout= itemView.findViewById(R.id.category_view);
+            nameView = itemView.findViewById(R.id.country_name);
+            imageView = itemView.findViewById(R.id.country_img);
+            constraintLayout= itemView.findViewById(R.id.country_view);
 
         }
     }
