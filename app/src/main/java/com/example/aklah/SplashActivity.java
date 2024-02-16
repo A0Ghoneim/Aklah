@@ -24,6 +24,7 @@ public class SplashActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_splash);
 
+
         MealRepository mr= MealRepositoryImp.getInstance(MealRemoteDataSourceImp.getInstance(), MealLocalDataSourceImp.getInstance(this));
         new AllPresentear(mr);
 

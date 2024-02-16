@@ -7,14 +7,19 @@ import androidx.lifecycle.LiveData;
 
 import com.example.aklah.Model.Meal;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Single;
 
 public class MealLocalDataSourceImp implements MealLocalDataSource {
     private Context context;
     private MealDAO dao;
-    private LiveData<List<Meal>> favouriteMeals;
+    private Flowable<List<Meal>> favouriteMeals;
 
-    private LiveData<Meal> requestedMeal;
+    private Single<Meal> requestedMeal;
 
     private static MealLocalDataSource mealLocalDataSource = null;
     private MealLocalDataSourceImp(Context context){
@@ -31,13 +36,18 @@ public class MealLocalDataSourceImp implements MealLocalDataSource {
         return mealLocalDataSource;
     }
     @Override
-    public LiveData<List<Meal>> getFavouriteMeals(){
+    public Flowable<List<Meal>> getFavouriteMeals(){
         return favouriteMeals;
     }
     @Override
-    public LiveData<Meal> getMealById(String id) {
+    public Single<Meal> getMealById(String id) {
         requestedMeal =dao.getMealById(id);
         return requestedMeal;
+    }
+
+    @Override
+    public Flowable<List<Meal>> getMealByDay(int day) {
+        return  dao.getMealByDay(day);
     }
 
 
@@ -46,17 +56,23 @@ public class MealLocalDataSourceImp implements MealLocalDataSource {
         new Thread(){
             @Override
             public void run() {
-                dao.deleteProduct(meal);
+                dao.deletefavmeal(meal.getIdMeal());
             }
         }.start();
     }
+
     @Override
-    public void insert(Meal meal){
+    public void deletesavedmeal(String idmeal, int day) {
         new Thread(){
             @Override
             public void run() {
-                dao.insertProduct(meal);
+                dao.deletesavedmeal(idmeal,day);
             }
         }.start();
+    }
+
+    @Override
+    public Completable insert(Meal meal){
+       return dao.insertProduct(meal);
     }
 }

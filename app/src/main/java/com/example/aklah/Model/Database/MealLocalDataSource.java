@@ -5,14 +5,23 @@ import androidx.lifecycle.LiveData;
 
 import com.example.aklah.Model.Meal;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public interface MealLocalDataSource {
-    LiveData<List<Meal>> getFavouriteMeals();
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Single;
 
-    LiveData<Meal> getMealById(String id);
+public interface MealLocalDataSource {
+    Flowable<List<Meal>> getFavouriteMeals();
+
+    Single<Meal> getMealById(String id);
+
+    Flowable<List<Meal>> getMealByDay(int day);
 
     void delete(Meal meal);
 
-    void insert(Meal meal);
+    void deletesavedmeal(String idmeal,int day);
+
+    Completable insert(Meal meal);
 }

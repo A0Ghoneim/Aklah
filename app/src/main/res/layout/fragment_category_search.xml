@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CategorySearchFragment">
+    tools:context=".CategorySearch.CategorySearchFragment">
 
     <SearchView
         android:id="@+id/category_search"

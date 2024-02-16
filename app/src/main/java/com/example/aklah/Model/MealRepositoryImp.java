@@ -11,7 +11,12 @@ import com.example.aklah.Network.MealNetworkCallback;
 //import com.example.mvparchitecture.Network.NetworkCallback;
 //import com.example.mvparchitecture.Network.ProductRemoteDataSource;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Single;
 
 public class MealRepositoryImp implements MealRepository {
     MealRemoteDataSource remote;
@@ -28,16 +33,21 @@ public class MealRepositoryImp implements MealRepository {
         local=mlds;
     }
     @Override
-    public LiveData<List<Meal>> getFavouriteMeals(){return local.getFavouriteMeals();}
+    public Flowable<List<Meal>> getFavouriteMeals(){return local.getFavouriteMeals();}
 
     @Override
-    public LiveData<Meal> getMealById(String id) {
+    public Single<Meal> getMealById(String id) {
         return local.getMealById(id);
     }
     @Override
-    public void insertMeal(Meal meal){local.insert(meal);}
+    public Completable insertMeal(Meal meal){return local.insert(meal);}
     @Override
     public void deleteMeal(Meal meal){local.delete(meal);}
+
+    @Override
+    public void deletesavedmeal(String idmeal, int day) {
+        local.deletesavedmeal(idmeal,day);
+    }
 
     @Override
     public void getMealsInCategory(MealNetworkCallback mealNetworkCallback,String category){remote.getMealsInCategoryNetworkCall(mealNetworkCallback,category);}
@@ -67,6 +77,11 @@ public class MealRepositoryImp implements MealRepository {
     @Override
     public void getMealById(MealNetworkCallback mealNetworkCallback, String id) {
             remote.getMealByIdNetworkCall(mealNetworkCallback,id);
+    }
+
+    @Override
+    public Flowable<List<Meal>> getMealByDay(int day) {
+        return local.getMealByDay(day);
     }
 
     @Override

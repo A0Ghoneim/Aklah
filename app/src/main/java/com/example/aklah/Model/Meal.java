@@ -1,6 +1,7 @@
 package com.example.aklah.Model;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -8,8 +9,9 @@ import java.io.Serializable;
 
 @Entity(tableName = "Meal")
 public class Meal implements Serializable {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @NonNull
+    private int myid;
     private String idMeal;
     private String strMeal;
     private String strCategory;
@@ -60,6 +62,8 @@ public class Meal implements Serializable {
     private String strMeasure20;
 
     private boolean favourite;
+
+    private  int day;
 
 
 
@@ -113,6 +117,14 @@ public class Meal implements Serializable {
         this.strMeasure18 = strMeasure18;
         this.strMeasure19 = strMeasure19;
         this.strMeasure20 = strMeasure20;
+    }
+
+    public int getMyid() {
+        return myid;
+    }
+
+    public void setMyid(int myid) {
+        this.myid = myid;
     }
 
     public String getIdMeal() {
@@ -505,5 +517,13 @@ public class Meal implements Serializable {
 
     public void setFavourite(boolean favourite) {
         this.favourite = favourite;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
     }
 }

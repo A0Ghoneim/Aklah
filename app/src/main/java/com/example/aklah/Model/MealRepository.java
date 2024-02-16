@@ -8,19 +8,28 @@ import com.example.aklah.Network.CountryNetworkCallback;
 import com.example.aklah.Network.IngredientNetworkCallback;
 import com.example.aklah.Network.MealNetworkCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Single;
+
 public interface MealRepository {
-    LiveData<List<Meal>> getFavouriteMeals();
+    Flowable<List<Meal>> getFavouriteMeals();
 
-    LiveData<Meal> getMealById(String id);
+    Single<Meal> getMealById(String id);
 
-    void insertMeal(Meal meal);
+    Completable insertMeal(Meal meal);
 
     void deleteMeal(Meal meal);
 
+    void deletesavedmeal(String idmeal,int day);
+
     void getMealsThatContain(MealNetworkCallback mealNetworkCallback, String name);
     void getMealById(MealNetworkCallback mealNetworkCallback, String id);
+
+    Flowable<List<Meal>> getMealByDay(int day);
     void getRandomMeal(MealNetworkCallback mealNetworkCallback);
     void getAllCategories(CategoryNetworkCallback categoryNetworkCallback);
     void getAllCountries(CountryNetworkCallback countryNetworkCallback);
