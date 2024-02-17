@@ -1,6 +1,8 @@
 package com.example.aklah.Home.View;
 
+import android.content.Context;
 import android.media.Image;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -29,6 +31,7 @@ import com.example.aklah.Network.MealRemoteDataSourceImp;
 import com.example.aklah.R;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class HomeFragment extends Fragment implements HomeView {
@@ -62,7 +65,7 @@ HomePresenter homePresenter;
 
     @Override
     public void showMeal(Meal meal) {
-        Glide.with(getActivity()).load(meal.getStrMealThumb()).apply(new RequestOptions().override(500,500)).into(mealOfTheDayImageView);
+        Glide.with(requireActivity()).load(meal.getStrMealThumb()).apply(new RequestOptions().override(500,500)).into(mealOfTheDayImageView);
         mealOfTheDayNameTextView.setText(meal.getStrMeal());
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,5 +84,23 @@ HomePresenter homePresenter;
     @Override
     public void showErrorMsg(String error) {
 
+    }
+    boolean connectionCheck(){
+        if (NetworkIsConnected()&&InternetIsConnected()){
+            return true;
+        }
+        return false;
+    }
+    private boolean NetworkIsConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+    private boolean InternetIsConnected() {
+        try {
+            String command = "ping -c 1 google.com";
+            return (Runtime.getRuntime().exec(command).waitFor() == 0);
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

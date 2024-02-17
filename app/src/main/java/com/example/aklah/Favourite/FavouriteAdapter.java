@@ -1,6 +1,7 @@
 package com.example.aklah.Favourite;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,15 +66,16 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.View
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (fragment==FRAGMENT_FAV) {
-                    FavouriteFragmentDirections.ActionFavouriteFragmentToMealInfoFragment action = FavouriteFragmentDirections.actionFavouriteFragmentToMealInfoFragment();
-                    action.setMealID(curr.getIdMeal());
-                    Navigation.findNavController(v).navigate(action);
-                }
-                else if (fragment==FRAGMENT_PLAN){
-                    ScheduleFragmentDirections.ActionScheduleFragmentToMealInfoFragment2 action = ScheduleFragmentDirections.actionScheduleFragmentToMealInfoFragment2();
-                    action.setMealID(curr.getIdMeal());
-                    Navigation.findNavController(v).navigate(action);
+                if (connectionCheck()) {
+                    if (fragment == FRAGMENT_FAV) {
+                        FavouriteFragmentDirections.ActionFavouriteFragmentToMealInfoFragment action = FavouriteFragmentDirections.actionFavouriteFragmentToMealInfoFragment();
+                        action.setMealID(curr.getIdMeal());
+                        Navigation.findNavController(v).navigate(action);
+                    } else if (fragment == FRAGMENT_PLAN) {
+                        ScheduleFragmentDirections.ActionScheduleFragmentToMealInfoFragment2 action = ScheduleFragmentDirections.actionScheduleFragmentToMealInfoFragment2();
+                        action.setMealID(curr.getIdMeal());
+                        Navigation.findNavController(v).navigate(action);
+                    }
                 }
             }
         });
@@ -112,6 +114,27 @@ public class FavouriteAdapter extends RecyclerView.Adapter<FavouriteAdapter.View
             constraintLayout= itemView.findViewById(R.id.country_view);
             cardView=itemView.findViewById(R.id.card_view);
             deleteIcon=itemView.findViewById(R.id.deleteicon);
+            if (!connectionCheck()){
+                deleteIcon.setVisibility(View.GONE);
+            }
+        }
+    }
+    boolean connectionCheck(){
+        if (NetworkIsConnected()&&InternetIsConnected()){
+            return true;
+        }
+        return false;
+    }
+    private boolean NetworkIsConnected() {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+    private boolean InternetIsConnected() {
+        try {
+            String command = "ping -c 1 google.com";
+            return (Runtime.getRuntime().exec(command).waitFor() == 0);
+        } catch (Exception e) {
+            return false;
         }
     }
 }

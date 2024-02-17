@@ -1,9 +1,12 @@
 package com.example.aklah.Search.View;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,6 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ScrollView;
+import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.example.aklah.Adapters.CategoryAdapter;
 import com.example.aklah.Adapters.CountryAdapter;
@@ -30,6 +37,12 @@ import java.util.ArrayList;
 
 
 public class SearchFragment extends Fragment implements MySearchView {
+    ImageView sticker;
+    TextView network;
+
+    ScrollView scrollView;
+
+    SearchView searchView;
 
     SearchPresenter searchPresenter;
 
@@ -58,9 +71,20 @@ public class SearchFragment extends Fragment implements MySearchView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        sticker=view.findViewById(R.id.imageView3);
+        network=view.findViewById(R.id.textView5);
+        scrollView=view.findViewById(R.id.scrollView2);
+        searchView=view.findViewById(R.id.searchView);
         categoryRecyclerView=view.findViewById(R.id.recyclerView);
         countryRecyclerView=view.findViewById(R.id.recycler_countries);
         ingredientRecyclerView =view.findViewById(R.id.ingredients_recycler);
+
+        if (!connectionCheck()){
+            scrollView.setVisibility(View.GONE);
+            searchView.setVisibility(View.GONE);
+            sticker.setVisibility(View.VISIBLE);
+            network.setVisibility(View.VISIBLE);
+        }
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),3,GridLayoutManager.HORIZONTAL,false){
             @Override
             public boolean canScrollVertically() {
@@ -110,6 +134,10 @@ public class SearchFragment extends Fragment implements MySearchView {
         ArrayList<Ingredient> ingredientsSample = new ArrayList<>(ingredients.subList(0,10));
         IngredientAdapter ingredientAdapter = new IngredientAdapter(getActivity(),ingredientsSample);
         ingredientRecyclerView.setAdapter(ingredientAdapter);
+
+    }
+    @Override
+    public void showErrorMsg(String error) {
 
     }
 
@@ -202,8 +230,23 @@ public class SearchFragment extends Fragment implements MySearchView {
         return countries;
     }
 
-    @Override
-    public void showErrorMsg(String error) {
 
+    boolean connectionCheck(){
+        if (NetworkIsConnected()&&InternetIsConnected()){
+            return true;
+        }
+        return false;
+    }
+    private boolean NetworkIsConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
+    }
+    private boolean InternetIsConnected() {
+        try {
+            String command = "ping -c 1 google.com";
+            return (Runtime.getRuntime().exec(command).waitFor() == 0);
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

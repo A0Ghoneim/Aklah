@@ -1,9 +1,11 @@
 package com.example.aklah.Favourite;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.Group;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,9 +41,17 @@ public class FavouriteFragment extends Fragment implements FavouriteView, OnFavo
     RecyclerView recyclerView;
 
     ArrayList<Meal> meals;
+    Group groupMoskala;
+    Group groupTamam;
+    int guest;
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("myapp",0);
+        guest=sharedPreferences.getInt("guest",0);
         presenter= new FavouritePresenterImp(this, MealRepositoryImp.getInstance(MealRemoteDataSourceImp.getInstance(), MealLocalDataSourceImp.getInstance(getActivity())));
         presenter.getFavourites();
     }
@@ -49,13 +59,21 @@ public class FavouriteFragment extends Fragment implements FavouriteView, OnFavo
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_favourite, container, false);
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        groupTamam=view.findViewById(R.id.group_tamam);
+        groupMoskala=view.findViewById(R.id.group_moshkla);
+        if (guest==1){
+            groupTamam.setVisibility(View.GONE);
+            groupMoskala.setVisibility(View.VISIBLE);
+        }
         recyclerView=view.findViewById(R.id.favouritesRecyclerView);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(),2,GridLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(gridLayoutManager);

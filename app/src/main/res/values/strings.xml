@@ -20,4 +20,11 @@
     <string name="wednesday">Wednesday</string>
     <string name="thursday">Thursday</string>
     <string name="friday">Friday</string>
+    <string name="facebook_app_id">1234</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">56789</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign UP</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="or_sign_in_with">OR  Sign in with</string>
 </resources>

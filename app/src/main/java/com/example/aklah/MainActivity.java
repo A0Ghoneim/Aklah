@@ -8,18 +8,30 @@ import androidx.navigation.NavDestination;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 public class MainActivity extends AppCompatActivity {
     NavController navController;
+    int guest;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = getIntent();
+        guest = intent.getIntExtra("guest",0);
+        SharedPreferences sharedPreferences = getSharedPreferences("myapp",0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("guest",guest);
+        editor.commit();
+
 
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -27,27 +39,41 @@ public class MainActivity extends AppCompatActivity {
          navController = NavHostFragment.findNavController(navHostFragment);
 
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId()==R.id.page_1){
-                    navController.navigate(R.id.homeFragment);
+                    if (navController.getCurrentDestination().getId()!=R.id.homeFragment) {
+                        navController.navigate(R.id.homeFragment);
+                    }
                     return true;
                 } else if (item.getItemId()==R.id.page_2) {
-                    navController.navigate(R.id.searchFragment);
+                    if (navController.getCurrentDestination().getId()!=R.id.searchFragment) {
+                        navController.navigate(R.id.searchFragment);
+                    }
                     return true;
                 }
                 else if (item.getItemId()==R.id.page_3) {
-                    navController.navigate(R.id.favouriteFragment);
+                    if (navController.getCurrentDestination().getId()!=R.id.favouriteFragment) {
+                        navController.navigate(R.id.favouriteFragment);
+                    }
                     return true;
                 }
                 else if (item.getItemId()==R.id.page_4) {
-                    navController.navigate(R.id.scheduleFragment);
+                    if (navController.getCurrentDestination().getId()!=R.id.scheduleFragment) {
+                        navController.navigate(R.id.scheduleFragment);
+                    }
                     return true;
                 }
-                return false;
-            }
+                return false;            }
         });
+       /* if (guest==1){
+                bottomNavigationView.getMenu().getItem(2).setEnabled(false);
+            bottomNavigationView.getMenu().getItem(2).se
+            bottomNavigationView.getMenu().getItem(3).setEnabled(false);
+
+        }*/
 
         navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
@@ -58,6 +84,20 @@ public class MainActivity extends AppCompatActivity {
                 } else {
 
                     bottomNavigationView.setVisibility(View.VISIBLE);
+                }
+                if (navDestination.getId() == R.id.homeFragment){
+                    bottomNavigationView.setSelectedItemId(R.id.page_1);
+
+                } else if (navDestination.getId() == R.id.searchFragment) {
+                    bottomNavigationView.setSelectedItemId(R.id.page_2);
+
+
+                } else if (navDestination.getId() == R.id.favouriteFragment) {
+                    bottomNavigationView.setSelectedItemId(R.id.page_3);
+
+
+                } else if (navDestination.getId() == R.id.scheduleFragment) {
+                    bottomNavigationView.setSelectedItemId(R.id.page_4);
                 }
             }
         });
