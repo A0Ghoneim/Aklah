@@ -1,4 +1,4 @@
-package com.example.aklah;
+package com.example.aklah.SignIn.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -7,7 +7,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,13 +15,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.aklah.MainActivity;
+import com.example.aklah.Model.Database.MealLocalDataSourceImp;
+import com.example.aklah.Model.Meal;
+import com.example.aklah.Model.MealRepositoryImp;
+import com.example.aklah.Network.MealRemoteDataSourceImp;
+import com.example.aklah.R;
+import com.example.aklah.SignIn.Presenter.SignInPresenter;
+import com.example.aklah.SignIn.Presenter.SignInPresenterImp;
+import com.example.aklah.SignupActivity;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -35,20 +42,37 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthCredential;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.CompletableObserver;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 
 public class Signin extends AppCompatActivity {
+
+    SignInPresenter presenter;
 
     ConstraintLayout back;
     FirebaseAuth auth;
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
     ImageView googleImage;
-   // ImageView facevookImage;
+
+    // ImageView facevookImage;
+    DatabaseReference dbRefrence;
+
+
+    FirebaseDatabase dbInstance;
 
     TextView signup;
 
@@ -58,6 +82,12 @@ public class Signin extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        presenter = new SignInPresenterImp(MealRepositoryImp.getInstance(MealRemoteDataSourceImp.getInstance(), MealLocalDataSourceImp.getInstance(this)));
+
+
+       dbInstance=FirebaseDatabase.getInstance("https://aklah-3ba8e-default-rtdb.europe-west1.firebasedatabase.app/");
+
         setContentView(R.layout.activity_signin);
         back=findViewById(R.id.back);
        // back.getBackground().setAlpha(200);
@@ -133,18 +163,56 @@ public class Signin extends AppCompatActivity {
                 String email =editText.getText().toString();
                 String password = passEdit.getText().toString();
                 //FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,password);
-                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password);
-                int i=0;
-                while (i<100) {
-                    if (i==99){
-                        Toast.makeText(Signin.this, "Failed to Login", Toast.LENGTH_SHORT).show();
+                FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()){
+                            dbRefrence = dbInstance.getReference("Users");
+                            dbRefrence.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    //    ArrayList<Meal> meallist = new ArrayList<>();
+
+                                    for (DataSnapshot mealSnapshot : snapshot.getChildren()) {
+                                        // For each person object in the list
+
+                                        Meal meal = mealSnapshot.getValue(Meal.class);
+                                        Log.i("TAG", "onDataChange: "+meal.getStrMeal());
+                                        presenter.insert(meal).subscribeOn(Schedulers.io())
+                                                .observeOn(AndroidSchedulers.mainThread())
+                                                .subscribe(new CompletableObserver() {
+                                                    @Override
+                                                    public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+
+                                                    }
+
+                                                    @Override
+                                                    public void onComplete() {
+
+                                                    }
+
+                                                    @Override
+                                                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+
+                                                    }
+                                                });
+                                    }
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                            navigateToOtherActivity(0);
+                        }
+                        else {
+                            Toast.makeText(Signin.this, "check password", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                       navigateToOtherActivity(0);
-                        break;
-                    }
-                    i++;
-                }
+                });
             }
         });
     }
@@ -177,6 +245,45 @@ public class Signin extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
+                            dbRefrence = dbInstance.getReference("Users");
+                            dbRefrence.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    //    ArrayList<Meal> meallist = new ArrayList<>();
+
+                                    for (DataSnapshot mealSnapshot : snapshot.getChildren()) {
+                                        // For each person object in the list
+
+                                        Meal meal = mealSnapshot.getValue(Meal.class);
+                                        Log.i("TAG", "onDataChange: "+meal.getStrMeal());
+                                        presenter.insert(meal).subscribeOn(Schedulers.io())
+                                                .observeOn(AndroidSchedulers.mainThread())
+                                                .subscribe(new CompletableObserver() {
+                                                    @Override
+                                                    public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+
+                                                    }
+
+                                                    @Override
+                                                    public void onComplete() {
+
+                                                    }
+
+                                                    @Override
+                                                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+
+                                                    }
+                                                });
+                                    }
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                             navigateToOtherActivity(0);
                         }
             }

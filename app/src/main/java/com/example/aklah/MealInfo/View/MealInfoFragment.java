@@ -43,6 +43,11 @@ import com.example.aklah.Model.Meal;
 import com.example.aklah.Model.MealRepositoryImp;
 import com.example.aklah.Network.MealRemoteDataSourceImp;
 import com.example.aklah.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.reactivestreams.Subscription;
 
@@ -65,6 +70,11 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
 
     Meal meal;
 
+    DatabaseReference dbRefrence;
+
+
+    FirebaseDatabase dbInstance;
+
     private WebView webView;
     private int savedVideoPosition;
     String videolink;
@@ -85,6 +95,9 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        dbInstance=FirebaseDatabase.getInstance("https://aklah-3ba8e-default-rtdb.europe-west1.firebasedatabase.app/");
+
         Log.i("info", "onCreate: ");
         presenter=new MealInfoPresenterImp(this, MealRepositoryImp.getInstance(MealRemoteDataSourceImp.getInstance(), MealLocalDataSourceImp.getInstance(getActivity())));
         String mealid = MealInfoFragmentArgs.fromBundle(getArguments()).getMealID();
@@ -164,6 +177,18 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
                         } else {
                             return false;
                         }
+                        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                            dbRefrence = dbInstance.getReference("Users");
+                            int k = meal.getMyid();
+                            String s = dbRefrence.push().getKey();
+                            Log.i("TAG", "onMenuItemClick: "+s);
+                            dbRefrence.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(s).setValue(meal).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Toast.makeText(getActivity(), "added to firebase", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
 
                         Completable completable = presenter.saveMeal(meal);
                         completable.subscribeOn(Schedulers.io())
@@ -208,6 +233,16 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
             @Override
             public void onClick(View v) {
                 meal.setFavourite(true);
+                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                    dbRefrence = dbInstance.getReference("Users");
+                    String s = dbRefrence.push().getKey();
+                    dbRefrence.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(s).setValue(meal).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Toast.makeText(getActivity(), "added to firebase", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
                 Completable completable = presenter.saveMeal(meal);
                 completable.subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())

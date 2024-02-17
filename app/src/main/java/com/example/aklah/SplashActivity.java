@@ -14,6 +14,7 @@ import com.example.aklah.Model.Database.MealLocalDataSourceImp;
 import com.example.aklah.Model.MealRepository;
 import com.example.aklah.Model.MealRepositoryImp;
 import com.example.aklah.Network.MealRemoteDataSourceImp;
+import com.example.aklah.SignIn.View.Signin;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SplashActivity extends AppCompatActivity {
@@ -36,7 +37,7 @@ public class SplashActivity extends AppCompatActivity {
 
                 if (FirebaseAuth.getInstance().getCurrentUser()==null){
                     Log.i("TAG", "onAnimationStart: true");
-                    intent = new Intent(SplashActivity.this,Signin.class);
+                    intent = new Intent(SplashActivity.this, Signin.class);
                 }
                 else {
                     Log.i("TAG", "onAnimationStart: false"+FirebaseAuth.getInstance().getCurrentUser().getEmail().toString());
