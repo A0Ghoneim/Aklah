@@ -55,17 +55,17 @@ public class MealRemoteDataSourceImp implements MealRemoteDataSource {
     }
 
     @Override
-    public void getRandomMealNetworkCall(MealNetworkCallback mealNetworkCallback) {
+    public void getRandomMealNetworkCall(RandomNetworkCallBack randomNetworkCallBack ) {
                 mealService.getRandomMeal().subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(pojoMeal -> mealNetworkCallback.onSuccessResult(pojoMeal.getMeals()),throwable ->mealNetworkCallback.onFaliureResult(throwable.getMessage()));
+                        .subscribe(pojoMeal -> randomNetworkCallBack.onSuccessResultRandom(pojoMeal.getMeals()),throwable ->randomNetworkCallBack.onFaliureResultRandom(throwable.getMessage()));
     }
 
     @Override
     public void getAllCategoriesNetworkCall(CategoryNetworkCallback categoryNetworkCallback) {
                 mealService.getAllCategories().subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(pojoCategory -> categoryNetworkCallback.onSuccessResult(pojoCategory.getCategories()),throwable -> categoryNetworkCallback.onFaliureResult(throwable.getMessage()));
+                        .subscribe(pojoCategory -> categoryNetworkCallback.onSuccessResultCategory(pojoCategory.getCategories()),throwable -> categoryNetworkCallback.onFaliureResultCategory(throwable.getMessage()));
     }
 
     @Override
@@ -79,7 +79,7 @@ public class MealRemoteDataSourceImp implements MealRemoteDataSource {
     public void getAllIngredientsNetworkCall(IngredientNetworkCallback ingredientNetworkCallback) {
                 mealService.getAllIngredients().subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(pojoIng -> ingredientNetworkCallback.onSuccessResultIngredient(pojoIng.getIngredients()),throwable -> ingredientNetworkCallback.onFaliureResult(throwable.getMessage()) );
+                        .subscribe(pojoIng -> ingredientNetworkCallback.onSuccessResultIngredient(pojoIng.getIngredients()),throwable -> ingredientNetworkCallback.onFaliureResultIngredient(throwable.getMessage()) );
     }
 
     @Override

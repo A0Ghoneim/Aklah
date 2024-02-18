@@ -5,6 +5,6 @@ import com.example.aklah.Model.Category;
 import java.util.ArrayList;
 
 public interface CategoryNetworkCallback {
-     void onSuccessResult(ArrayList<Category> categories);
-     void onFaliureResult(String errormsg);
+     void onSuccessResultCategory(ArrayList<Category> categories);
+     void onFaliureResultCategory(String errormsg);
 }

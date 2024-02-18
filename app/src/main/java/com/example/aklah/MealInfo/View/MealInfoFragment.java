@@ -179,8 +179,14 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
                         }
                         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                             dbRefrence = dbInstance.getReference("Users");
-                            int k = meal.getMyid();
-                            String s = dbRefrence.push().getKey();
+                            boolean f = meal.isFavourite();
+                            String s;
+                            if (f) {
+                                s = meal.getIdMeal() + "" +"1"+meal.getDay();
+                            }
+                            else {
+                                s = meal.getIdMeal()+""+"0"+meal.getDay();
+                            }
                             Log.i("TAG", "onMenuItemClick: "+s);
                             dbRefrence.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(s).setValue(meal).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -235,7 +241,14 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
                 meal.setFavourite(true);
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                     dbRefrence = dbInstance.getReference("Users");
-                    String s = dbRefrence.push().getKey();
+                    boolean f = meal.isFavourite();
+                    String s;
+                    if (f) {
+                         s = meal.getIdMeal() + "" +"1"+meal.getDay();
+                    }
+                    else {
+                        s = meal.getIdMeal()+""+"0"+meal.getDay();
+                    }
                     dbRefrence.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(s).setValue(meal).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {

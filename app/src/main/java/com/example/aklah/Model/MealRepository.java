@@ -7,6 +7,7 @@ import com.example.aklah.Network.CategoryNetworkCallback;
 import com.example.aklah.Network.CountryNetworkCallback;
 import com.example.aklah.Network.IngredientNetworkCallback;
 import com.example.aklah.Network.MealNetworkCallback;
+import com.example.aklah.Network.RandomNetworkCallBack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +27,13 @@ public interface MealRepository {
 
     void deletesavedmeal(String idmeal,int day);
 
+    void clearEverything();
+
     void getMealsThatContain(MealNetworkCallback mealNetworkCallback, String name);
     void getMealById(MealNetworkCallback mealNetworkCallback, String id);
 
     Flowable<List<Meal>> getMealByDay(int day);
-    void getRandomMeal(MealNetworkCallback mealNetworkCallback);
+    void getRandomMeal(RandomNetworkCallBack randomNetworkCallBack);
     void getAllCategories(CategoryNetworkCallback categoryNetworkCallback);
     void getAllCountries(CountryNetworkCallback countryNetworkCallback);
     void getAllIngredients(IngredientNetworkCallback ingredientNetworkCallback);

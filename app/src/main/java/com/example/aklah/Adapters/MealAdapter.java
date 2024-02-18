@@ -21,6 +21,8 @@ import com.example.aklah.MealSearch.View.MealSearchFragmentDirections;
 import com.example.aklah.Model.Ingredient;
 import com.example.aklah.Model.Meal;
 import com.example.aklah.R;
+import com.example.aklah.Search.View.SearchFragment;
+import com.example.aklah.Search.View.SearchFragmentDirections;
 
 import java.util.ArrayList;
 
@@ -28,6 +30,8 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.ViewHolder> {
 
     public static final int FRAGMENT_HOME = 0;
     public static final int FRAGMENT_MEAL_SEARCH=1;
+
+    public static final int FRAGMENT_SEARCH=2;
 
     private int fragment;
 
@@ -68,6 +72,10 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.ViewHolder> {
                     Navigation.findNavController(v).navigate(action);
                 } else if (fragment==FRAGMENT_HOME) {
                     HomeFragmentDirections.ActionHomeFragmentToMealInfoFragment action = HomeFragmentDirections.actionHomeFragmentToMealInfoFragment();
+                    action.setMealID(curr.getIdMeal());
+                    Navigation.findNavController(v).navigate(action);
+                } else if (fragment==FRAGMENT_SEARCH) {
+                    SearchFragmentDirections.ActionSearchFragmentToMealInfoFragment action = SearchFragmentDirections.actionSearchFragmentToMealInfoFragment();
                     action.setMealID(curr.getIdMeal());
                     Navigation.findNavController(v).navigate(action);
                 }

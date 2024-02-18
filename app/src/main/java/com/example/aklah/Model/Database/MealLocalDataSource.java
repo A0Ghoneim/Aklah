@@ -24,4 +24,6 @@ public interface MealLocalDataSource {
     void deletesavedmeal(String idmeal,int day);
 
     Completable insert(Meal meal);
+
+    void clearEverything();
 }

@@ -3,7 +3,7 @@ package com.example.aklah.Network;
 public interface MealRemoteDataSource {
     void getMealsThatContainNetworkCall(MealNetworkCallback mealNetworkCallback, String name);
     void getMealByIdNetworkCall(MealNetworkCallback mealNetworkCallback, String id);
-    void getRandomMealNetworkCall(MealNetworkCallback mealNetworkCallback);
+    void getRandomMealNetworkCall(RandomNetworkCallBack randomNetworkCallBack );
     void getAllCategoriesNetworkCall(CategoryNetworkCallback categoryNetworkCallback);
     void getAllCountriesNetworkCall(CountryNetworkCallback countryNetworkCallback);
     void getAllIngredientsNetworkCall(IngredientNetworkCallback ingredientNetworkCallback);

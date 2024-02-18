@@ -75,4 +75,14 @@ public class MealLocalDataSourceImp implements MealLocalDataSource {
     public Completable insert(Meal meal){
        return dao.insertProduct(meal);
     }
+
+    @Override
+    public void clearEverything() {
+        new Thread(){
+            @Override
+            public void run() {
+                dao.clearEverything();
+            }
+        }.start();
+    }
 }

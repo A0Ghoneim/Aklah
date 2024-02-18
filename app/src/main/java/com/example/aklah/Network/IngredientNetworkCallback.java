@@ -6,5 +6,5 @@ import java.util.ArrayList;
 
 public interface IngredientNetworkCallback {
      void onSuccessResultIngredient(ArrayList<Ingredient> ingredients);
-     void onFaliureResult(String errormsg);
+     void onFaliureResultIngredient(String errormsg);
 }

@@ -28,4 +28,7 @@ public interface MealDAO {
     void deletefavmeal(String idmeal);
     @Query("Delete from Meal where idMeal=:idmeal and day = :day")
     void deletesavedmeal(String idmeal,int day);
+
+    @Query("Delete from Meal")
+    void clearEverything();
 }

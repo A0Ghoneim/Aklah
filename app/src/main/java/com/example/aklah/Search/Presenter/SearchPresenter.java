@@ -7,4 +7,6 @@ public interface SearchPresenter {
 
      void getIngredients();
 
+     void getMealsThatContain(String newText);
+
 }

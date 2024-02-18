@@ -8,6 +8,7 @@ import com.example.aklah.Network.CountryNetworkCallback;
 import com.example.aklah.Network.IngredientNetworkCallback;
 import com.example.aklah.Network.MealRemoteDataSource;
 import com.example.aklah.Network.MealNetworkCallback;
+import com.example.aklah.Network.RandomNetworkCallBack;
 //import com.example.mvparchitecture.Network.NetworkCallback;
 //import com.example.mvparchitecture.Network.ProductRemoteDataSource;
 
@@ -50,6 +51,11 @@ public class MealRepositoryImp implements MealRepository {
     }
 
     @Override
+    public void clearEverything() {
+        local.clearEverything();
+    }
+
+    @Override
     public void getMealsInCategory(MealNetworkCallback mealNetworkCallback,String category){remote.getMealsInCategoryNetworkCall(mealNetworkCallback,category);}
 
     @Override
@@ -85,8 +91,8 @@ public class MealRepositoryImp implements MealRepository {
     }
 
     @Override
-    public void getRandomMeal(MealNetworkCallback mealNetworkCallback) {
-            remote.getRandomMealNetworkCall(mealNetworkCallback);
+    public void getRandomMeal(RandomNetworkCallBack randomNetworkCallBack) {
+            remote.getRandomMealNetworkCall(randomNetworkCallBack);
     }
 
     @Override

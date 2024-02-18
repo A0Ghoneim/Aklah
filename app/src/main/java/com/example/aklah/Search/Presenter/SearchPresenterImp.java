@@ -3,16 +3,18 @@ package com.example.aklah.Search.Presenter;
 import com.example.aklah.Model.Category;
 import com.example.aklah.Model.Country;
 import com.example.aklah.Model.Ingredient;
+import com.example.aklah.Model.Meal;
 import com.example.aklah.Model.MealRepository;
 import com.example.aklah.Network.CategoryNetworkCallback;
 import com.example.aklah.Network.CountryNetworkCallback;
 import com.example.aklah.Network.IngredientNetworkCallback;
+import com.example.aklah.Network.MealNetworkCallback;
 import com.example.aklah.Search.Presenter.SearchPresenter;
 import com.example.aklah.Search.View.MySearchView;
 
 import java.util.ArrayList;
 
-public class SearchPresenterImp implements SearchPresenter, CategoryNetworkCallback, CountryNetworkCallback , IngredientNetworkCallback {
+public class SearchPresenterImp implements SearchPresenter, CategoryNetworkCallback, CountryNetworkCallback , IngredientNetworkCallback, MealNetworkCallback {
 
     MySearchView view;
 
@@ -39,7 +41,12 @@ public class SearchPresenterImp implements SearchPresenter, CategoryNetworkCallb
     }
 
     @Override
-    public void onSuccessResult(ArrayList<Category> categories) {
+    public void getMealsThatContain(String newText) {
+        repo.getMealsThatContain(this,newText);
+    }
+
+    @Override
+    public void onSuccessResultCategory(ArrayList<Category> categories) {
         view.getCategories(categories);
     }
 
@@ -50,7 +57,12 @@ public class SearchPresenterImp implements SearchPresenter, CategoryNetworkCallb
     }
 
     @Override
-    public void onFaliureResult(String errormsg) {
+    public void onFaliureResultIngredient(String errormsg) {
+
+    }
+
+    @Override
+    public void onFaliureResultCategory(String errormsg) {
         view.showErrorMsg(errormsg);
     }
 
@@ -62,5 +74,15 @@ public class SearchPresenterImp implements SearchPresenter, CategoryNetworkCallb
     @Override
     public void onFaliureResultCountry(String errormsg) {
             view.showErrorMsg(errormsg);
+    }
+
+    @Override
+    public void onSuccessResult(ArrayList<Meal> meals) {
+        view.setAllMeals(meals);
+    }
+
+    @Override
+    public void onFaliureResult(String errormsg) {
+
     }
 }
