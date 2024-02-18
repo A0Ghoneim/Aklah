@@ -56,12 +56,12 @@ public class MealLocalDataSourceImp implements MealLocalDataSource {
         new Thread(){
             @Override
             public void run() {
-                dao.deletefavmeal(meal.getIdMeal());
+                dao.delete(meal);
             }
         }.start();
     }
 
-    @Override
+   /* @Override
     public void deletesavedmeal(String idmeal, int day) {
         new Thread(){
             @Override
@@ -69,7 +69,7 @@ public class MealLocalDataSourceImp implements MealLocalDataSource {
                 dao.deletesavedmeal(idmeal,day);
             }
         }.start();
-    }
+    }*/
 
     @Override
     public Completable insert(Meal meal){

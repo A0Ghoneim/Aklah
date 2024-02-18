@@ -91,6 +91,7 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
     ImageButton planbtn;
 
     RecyclerView recyclerView;
+    private Object lock = new Object();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -150,79 +151,78 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
         planbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create a PopupMenu and inflate the menu resource
-                PopupMenu popupMenu = new PopupMenu(getActivity(), v);
-                popupMenu.inflate(R.menu.overflow_menu);
+                synchronized (lock) {
+                    //meal=this.meal;
+                    // Create a PopupMenu and inflate the menu resource
+                    PopupMenu popupMenu = new PopupMenu(getActivity(), v);
+                    popupMenu.inflate(R.menu.overflow_menu);
 
-                // Set up a listener for menu item clicks
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        int itemId = item.getItemId();
+                    // Set up a listener for menu item clicks
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            int itemId = item.getItemId();
 
-                        if (itemId == R.id.saturday_choice) {
-                            meal.setDay(1);
-                        } else if (itemId == R.id.sunday_choice) {
-                            meal.setDay(2);
-                        } else if (itemId == R.id.monday_choice) {
-                            meal.setDay(3);
-                        } else if (itemId == R.id.tuesday_choice) {
-                            meal.setDay(4);
-                        } else if (itemId == R.id.wednesday_choice) {
-                            meal.setDay(5);
-                        } else if (itemId == R.id.thursday_choice) {
-                            meal.setDay(6);
-                        } else if (itemId == R.id.friday_choice) {
-                            meal.setDay(7);
-                        } else {
-                            return false;
-                        }
-                        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                            dbRefrence = dbInstance.getReference("Users");
-                            boolean f = meal.isFavourite();
-                            String s;
-                            if (f) {
-                                s = meal.getIdMeal() + "" +"1"+meal.getDay();
+                            if (itemId == R.id.saturday_choice) {
+                                meal.setDay(1);
+                            } else if (itemId == R.id.sunday_choice) {
+                                meal.setDay(2);
+                            } else if (itemId == R.id.monday_choice) {
+                                meal.setDay(3);
+                            } else if (itemId == R.id.tuesday_choice) {
+                                meal.setDay(4);
+                            } else if (itemId == R.id.wednesday_choice) {
+                                meal.setDay(5);
+                            } else if (itemId == R.id.thursday_choice) {
+                                meal.setDay(6);
+                            } else if (itemId == R.id.friday_choice) {
+                                meal.setDay(7);
+                            } else {
+                                return false;
                             }
-                            else {
-                                s = meal.getIdMeal()+""+"0"+meal.getDay();
-                            }
-                            Log.i("TAG", "onMenuItemClick: "+s);
-                            dbRefrence.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(s).setValue(meal).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    Toast.makeText(getActivity(), "added to firebase", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
 
-                        Completable completable = presenter.saveMeal(meal);
-                        completable.subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new CompletableObserver() {
+                            String s = meal.getIdMeal() + "" + "0" + meal.getDay();
+                            meal.setFavourite(false);
+                            meal.setMyid(Integer.parseInt(s));
+
+                            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                                dbRefrence = dbInstance.getReference("Users");
+
+                                dbRefrence.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(Integer.toString(meal.getMyid())).setValue(meal).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
-                                    public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
-
-                                    }
-
-                                    @Override
-                                    public void onComplete() {
-                                        Toast.makeText(getActivity(), "Added to Plan", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                    @Override
-                                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
-                                        Toast.makeText(getActivity(), "Failed to add", Toast.LENGTH_SHORT).show();
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        Toast.makeText(getActivity(), "added to firebase", Toast.LENGTH_SHORT).show();
                                     }
                                 });
-                        return true;
-                    }
-                });
+                            }
 
-                // Show the PopupMenu
-                popupMenu.show();
-            }
-        });
+                            Completable completable = presenter.saveMeal(meal);
+                            completable.subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(new CompletableObserver() {
+                                        @Override
+                                        public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+
+                                        }
+
+                                        @Override
+                                        public void onComplete() {
+                                            Toast.makeText(getActivity(), "Added to Plan", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+                                            Toast.makeText(getActivity(), "Failed to add", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                            return true;
+                        }
+                    });
+
+                    // Show the PopupMenu
+                    popupMenu.show();
+                }
+            }});
 
         schedulebtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,65 +238,61 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
         addbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                meal.setFavourite(true);
-                if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                    dbRefrence = dbInstance.getReference("Users");
-                    boolean f = meal.isFavourite();
-                    String s;
-                    if (f) {
-                         s = meal.getIdMeal() + "" +"1"+meal.getDay();
-                    }
-                    else {
-                        s = meal.getIdMeal()+""+"0"+meal.getDay();
-                    }
-                    dbRefrence.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(s).setValue(meal).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Toast.makeText(getActivity(), "added to firebase", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-                Completable completable = presenter.saveMeal(meal);
-                completable.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new CompletableObserver() {
+                synchronized (lock) {
+                    meal.setFavourite(true);
+                    if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                        dbRefrence = dbInstance.getReference("Users");
+
+                        String s = meal.getIdMeal() + "" + "1" + "0";
+                        meal.setMyid(Integer.parseInt(s));
+                        dbRefrence.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(Integer.toString(meal.getMyid())).setValue(meal).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
-                            public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
-
-                            }
-
-                            @Override
-                            public void onComplete() {
-                                Toast.makeText(getActivity(), "Added Successfully", Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
-                             //   if (e.getLocalizedMessage())
-                                Single<Meal> flowable = presenter.getMealbyid(meal.getIdMeal());
-                                flowable.subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .subscribe(new SingleObserver<Meal>() {
-                                            @Override
-                                            public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
-
-                                            }
-
-                                            @Override
-                                            public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull Meal meal) {
-                                                Toast.makeText(getActivity(), "Already Added", Toast.LENGTH_SHORT).show();
-                                            }
-
-                                            @Override
-                                            public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
-                                                Toast.makeText(getActivity(), "Failed to Add", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(getActivity(), "added to firebase", Toast.LENGTH_SHORT).show();
                             }
                         });
-            }
-        });
+                    }
+                    Completable completable = presenter.saveMeal(meal);
+                    completable.subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new CompletableObserver() {
+                                @Override
+                                public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onComplete() {
+                                    Toast.makeText(getActivity(), "Added Successfully", Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+                                    //   if (e.getLocalizedMessage())
+                                    Single<Meal> flowable = presenter.getMealbyid(meal.getIdMeal());
+                                    flowable.subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(new SingleObserver<Meal>() {
+                                                @Override
+                                                public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+
+                                                }
+
+                                                @Override
+                                                public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull Meal meal) {
+                                                    Toast.makeText(getActivity(), "Already Added", Toast.LENGTH_SHORT).show();
+                                                }
+
+                                                @Override
+                                                public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+                                                    Toast.makeText(getActivity(), "Failed to Add", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+
+                                }
+                            });
+                }
+            }});
         RecipeAdapter recipeAdapter = new RecipeAdapter(getActivity(),recipeIngredients,recipeMeasures);
         recyclerView.setAdapter(recipeAdapter);
         videolink = meal.getStrYoutube().replace("watch?v=","embed/");

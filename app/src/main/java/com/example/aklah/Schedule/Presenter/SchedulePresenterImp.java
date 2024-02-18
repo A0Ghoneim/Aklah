@@ -1,5 +1,6 @@
 package com.example.aklah.Schedule.Presenter;
 
+import com.example.aklah.Model.Meal;
 import com.example.aklah.Model.MealRepository;
 import com.example.aklah.Schedule.ScheduleView;
 
@@ -49,7 +50,12 @@ public class SchedulePresenterImp implements SchedulePresenter{
     }
 
     @Override
+    public void deleteMeal(Meal meal) {
+        repo.deleteMeal(meal);
+    }
+
+  /*  @Override
     public void deletesavedmeal(String idmeal, int day) {
         repo.deletesavedmeal(idmeal,day);
-    }
+    }*/
 }

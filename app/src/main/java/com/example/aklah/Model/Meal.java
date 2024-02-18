@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 @Entity(tableName = "Meal")
 public class Meal implements Serializable {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @NonNull
     private int myid;
     private String idMeal;

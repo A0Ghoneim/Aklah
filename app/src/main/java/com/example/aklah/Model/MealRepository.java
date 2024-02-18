@@ -25,7 +25,7 @@ public interface MealRepository {
 
     void deleteMeal(Meal meal);
 
-    void deletesavedmeal(String idmeal,int day);
+    //void deletesavedmeal(String idmeal,int day);
 
     void clearEverything();
 

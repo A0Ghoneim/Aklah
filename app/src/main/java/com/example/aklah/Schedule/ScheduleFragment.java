@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.Toast;
 
 import com.example.aklah.Adapters.OnFavouriteClickListener;
 import com.example.aklah.Favourite.FavouriteAdapter;
@@ -26,6 +27,11 @@ import com.example.aklah.Network.MealRemoteDataSourceImp;
 import com.example.aklah.R;
 import com.example.aklah.Schedule.Presenter.SchedulePresenter;
 import com.example.aklah.Schedule.Presenter.SchedulePresenterImp;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +43,10 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class ScheduleFragment extends Fragment implements ScheduleView, OnFavouriteClickListener {
 
     SchedulePresenter presenter;
+
+    DatabaseReference dbRefrence;
+
+    FirebaseDatabase dbInstance;
     ArrayList<Meal> satmeals;
     ArrayList<Meal> sunmeals;
     ArrayList<Meal> monmeals;
@@ -64,6 +74,7 @@ public class ScheduleFragment extends Fragment implements ScheduleView, OnFavour
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dbInstance= FirebaseDatabase.getInstance("https://aklah-3ba8e-default-rtdb.europe-west1.firebasedatabase.app/");
         presenter=new SchedulePresenterImp(this, MealRepositoryImp.getInstance(MealRemoteDataSourceImp.getInstance(), MealLocalDataSourceImp.getInstance(getActivity())));
         satmeals=new ArrayList<>();
         sunmeals=new ArrayList<>();
@@ -187,6 +198,21 @@ public class ScheduleFragment extends Fragment implements ScheduleView, OnFavour
 
     @Override
     public void onFavMealClick(Meal meal) {
-        presenter.deletesavedmeal(meal.getIdMeal(),meal.getDay());
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            dbRefrence = dbInstance.getReference("Users");
+            dbRefrence.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(Integer.toString(meal.getMyid())).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Toast.makeText(getActivity(), "firebase delete", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getActivity(), "firebase fail to delete", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+       // presenter.deletesavedmeal(meal.getIdMeal(),meal.getDay());
+        presenter.deleteMeal(meal);
     }
 }

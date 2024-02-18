@@ -45,10 +45,10 @@ public class MealRepositoryImp implements MealRepository {
     @Override
     public void deleteMeal(Meal meal){local.delete(meal);}
 
-    @Override
+    /*@Override
     public void deletesavedmeal(String idmeal, int day) {
         local.deletesavedmeal(idmeal,day);
-    }
+    }*/
 
     @Override
     public void clearEverything() {
