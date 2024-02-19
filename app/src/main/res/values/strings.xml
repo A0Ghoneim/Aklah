@@ -28,4 +28,7 @@
     <string name="don_t_have_an_account">Don\'t have an account?</string>
     <string name="or_sign_in_with">OR  Sign in with</string>
     <string name="sign_out">Sign out</string>
+    <string name="cuisines">Cuisines</string>
+    <string name="view_all_Cuisines">View All Cuisines →</string>
+    <string name="view_all_ingredients">View All ingredients →</string>
 </resources>

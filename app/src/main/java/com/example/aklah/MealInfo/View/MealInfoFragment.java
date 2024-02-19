@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.icu.util.Calendar;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.constraintlayout.widget.Group;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -32,6 +34,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,6 +82,9 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
     private int savedVideoPosition;
     String videolink;
 
+    Group groupGuest;
+    int guest;
+
     MealInfoPresenter presenter;
 
     ArrayList<String> recipeIngredients;
@@ -86,9 +92,11 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
 
     TextView mealTextView;
     TextView describtionTextView;
-    Button addbtn;
+    ImageView addbtn;
     ImageButton schedulebtn;
     ImageButton planbtn;
+
+    Meal sentMeal;
 
     RecyclerView recyclerView;
     private Object lock = new Object();
@@ -96,13 +104,20 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("myapp",0);
+        guest=sharedPreferences.getInt("guest",0);
         dbInstance=FirebaseDatabase.getInstance("https://aklah-3ba8e-default-rtdb.europe-west1.firebasedatabase.app/");
 
         Log.i("info", "onCreate: ");
         presenter=new MealInfoPresenterImp(this, MealRepositoryImp.getInstance(MealRemoteDataSourceImp.getInstance(), MealLocalDataSourceImp.getInstance(getActivity())));
         String mealid = MealInfoFragmentArgs.fromBundle(getArguments()).getMealID();
+        sentMeal = MealInfoFragmentArgs.fromBundle(getArguments()).getMealData();
+        if (sentMeal!=null){
+
+        }
+        else {
             presenter.getMeal(mealid);
+        }
       /*  meal =MealInfoFragmentArgs.fromBundle(getArguments()).getMealData();
         recipeIngredients =new ArrayList<>();
         recipeMeasures = new ArrayList<>();
@@ -119,19 +134,33 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        groupGuest = view.findViewById(R.id.group_guest);
+        mealTextView = view.findViewById(R.id.mealName);
+        describtionTextView = view.findViewById(R.id.describtionView);
+        if (guest==1||sentMeal!=null) {
+            groupGuest.setVisibility(View.GONE);
+        }
+        webView = view.findViewById(R.id.videoView);
+        recyclerView = view.findViewById(R.id.recycle);
+        if (sentMeal!=null){
+        webView.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.GONE);
 
+        mealTextView.setText(sentMeal.getStrMeal());
+        describtionTextView.setText(sentMeal.getStrInstructions());
 
-         mealTextView = view.findViewById(R.id.mealName);
-         describtionTextView = view.findViewById(R.id.describtionView);
-
-
-         recyclerView = view.findViewById(R.id.recycle);
+        }
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
 
 
-        webView = view.findViewById(R.id.videoView);
+
+
+
+
+
+
          addbtn = view.findViewById(R.id.addtofavbtn);
          schedulebtn=view.findViewById(R.id.scheduleButton);
          planbtn=view.findViewById(R.id.planbtn);
@@ -141,6 +170,23 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
 
     @Override
     public void showMeal(Meal meal) {
+        presenter.getMealbyid(meal.getIdMeal()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<Meal>() {
+            @Override
+            public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull Meal meal) {
+                    addbtn.setImageResource(R.drawable.favorite_fill1_wght400_grad0_opsz24);
+            }
+
+            @Override
+            public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+
+            }
+        });
+      //  addbtn.setImageResource(R.drawable.baseline_home_24);
         Log.i("TAG", "showMeal: "+meal.getStrMeal());
         this.meal=meal;
         recipeIngredients =new ArrayList<>();
@@ -191,7 +237,7 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
                                 dbRefrence.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(Integer.toString(meal.getMyid())).setValue(meal).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        Toast.makeText(getActivity(), "added to firebase", Toast.LENGTH_SHORT).show();
+                                     //   Toast.makeText(getActivity(), "added to firebase", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }
@@ -239,6 +285,7 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
             @Override
             public void onClick(View v) {
                 synchronized (lock) {
+                    addbtn.setImageResource(R.drawable.favorite_fill1_wght400_grad0_opsz24);
                     meal.setFavourite(true);
                     if (FirebaseAuth.getInstance().getCurrentUser() != null) {
                         dbRefrence = dbInstance.getReference("Users");

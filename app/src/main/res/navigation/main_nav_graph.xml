@@ -94,6 +94,11 @@
         <action
             android:id="@+id/action_countrySearchFragment_to_mealSearchFragment2"
             app:destination="@id/mealSearchFragment2" />
+        <argument
+            android:name="allCountries"
+            app:argType="com.example.aklah.Model.PojoCountry"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/ingredientSearchFragment"
@@ -103,6 +108,11 @@
         <action
             android:id="@+id/action_ingredientSearchFragment_to_mealSearchFragment2"
             app:destination="@id/mealSearchFragment2" />
+        <argument
+            android:name="allIngredients"
+            app:argType="com.example.aklah.Model.PojoIng"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/mealSearchFragment2"

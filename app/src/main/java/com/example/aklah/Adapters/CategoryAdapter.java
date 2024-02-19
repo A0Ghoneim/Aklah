@@ -1,6 +1,9 @@
 package com.example.aklah.Adapters;
 
+import static com.google.android.material.internal.ContextUtils.getActivity;
+
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,7 +45,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<
 
     int layout;
 
-    private int size;
 
 
 
@@ -90,6 +93,12 @@ public class CategoryAdapter extends RecyclerView.Adapter<
 
                 }
             });
+            holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.yellow));
+            float elevationInDp = 12f; // Set your desired elevation value
+            float elevationInPixels = context.getResources().getDisplayMetrics().density * elevationInDp;
+            holder.cardView.setElevation(elevationInPixels);
+            holder.cardView.setRadius(32f);
+
 
         }
         else {

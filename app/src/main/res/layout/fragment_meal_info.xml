@@ -80,25 +80,11 @@
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/mealName" />
 
-        <Button
-            android:id="@+id/addtofavbtn"
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group_guest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:text="@string/add_to_favourites"
-            app:layout_constraintBottom_toBottomOf="@+id/textView7"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView7" />
-
-        <ImageButton
-            android:id="@+id/scheduleButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="28dp"
-            app:layout_constraintEnd_toEndOf="@+id/addtofavbtn"
-            app:layout_constraintTop_toBottomOf="@+id/addtofavbtn"
-            app:srcCompat="@drawable/calendar_month_fill0_wght400_grad0_opsz24" />
+            app:constraint_referenced_ids="planbtn,scheduleButton" />
 
         <ImageButton
             android:id="@+id/planbtn"
@@ -106,8 +92,26 @@
             android:layout_height="50dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toStartOf="@+id/scheduleButton"
-            app:layout_constraintTop_toTopOf="@+id/scheduleButton"
+            app:layout_constraintTop_toBottomOf="@+id/mealName"
             app:srcCompat="@drawable/baseline_schedule_24" />
+
+        <ImageButton
+            android:id="@+id/scheduleButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="12dp"
+            app:layout_constraintEnd_toStartOf="@+id/addtofavbtn"
+            app:layout_constraintTop_toTopOf="@+id/planbtn"
+            app:srcCompat="@drawable/calendar_month_fill0_wght400_grad0_opsz24" />
+
+        <ImageView
+            android:id="@+id/addtofavbtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/planbtn"
+            app:srcCompat="@drawable/favorite_fill0_wght400_grad0_opsz24" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

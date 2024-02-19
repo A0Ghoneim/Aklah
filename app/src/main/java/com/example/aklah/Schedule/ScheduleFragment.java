@@ -1,27 +1,24 @@
 package com.example.aklah.Schedule;
 
-import android.app.DatePickerDialog;
-import android.icu.util.Calendar;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.Group;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.provider.CalendarContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.example.aklah.Adapters.OnFavouriteClickListener;
-import com.example.aklah.Favourite.FavouriteAdapter;
+import com.example.aklah.Adapters.FavouriteAdapter;
 import com.example.aklah.Model.Database.MealLocalDataSourceImp;
 import com.example.aklah.Model.Meal;
-import com.example.aklah.Model.MealRepository;
 import com.example.aklah.Model.MealRepositoryImp;
 import com.example.aklah.Network.MealRemoteDataSourceImp;
 import com.example.aklah.R;
@@ -47,6 +44,11 @@ public class ScheduleFragment extends Fragment implements ScheduleView, OnFavour
     DatabaseReference dbRefrence;
 
     FirebaseDatabase dbInstance;
+
+    Group groupMoskala;
+    Group groupTamam;
+
+    int guest;
     ArrayList<Meal> satmeals;
     ArrayList<Meal> sunmeals;
     ArrayList<Meal> monmeals;
@@ -74,6 +76,8 @@ public class ScheduleFragment extends Fragment implements ScheduleView, OnFavour
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("myapp",0);
+        guest=sharedPreferences.getInt("guest",0);
         dbInstance= FirebaseDatabase.getInstance("https://aklah-3ba8e-default-rtdb.europe-west1.firebasedatabase.app/");
         presenter=new SchedulePresenterImp(this, MealRepositoryImp.getInstance(MealRemoteDataSourceImp.getInstance(), MealLocalDataSourceImp.getInstance(getActivity())));
         satmeals=new ArrayList<>();
@@ -104,6 +108,12 @@ public class ScheduleFragment extends Fragment implements ScheduleView, OnFavour
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        groupTamam=view.findViewById(R.id.group_tmam);
+        groupMoskala=view.findViewById(R.id.group_moshkla);
+        if (guest==1) {
+            groupTamam.setVisibility(View.GONE);
+            groupMoskala.setVisibility(View.VISIBLE);
+        }
         satrecycle=view.findViewById(R.id.sat_day_Recycler);
         sunrecycle=view.findViewById(R.id.sun_day_Recycler);
         monrecycle=view.findViewById(R.id.mon_day_Recycler);

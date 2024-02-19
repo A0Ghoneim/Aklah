@@ -91,7 +91,6 @@ Observable<Meal> observable;
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.equals(""))return false ;
                 observable.filter(meal -> meal.getStrMeal().toLowerCase().contains(newText.toLowerCase()))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -105,7 +104,6 @@ Observable<Meal> observable;
                             public void onNext(@NonNull Meal meal) {
                                     meals.add(meal);
                             }
-
                             @Override
                             public void onError(@NonNull Throwable e) {
 

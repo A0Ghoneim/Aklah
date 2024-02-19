@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.Image;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +29,7 @@ import com.example.aklah.Home.Presenter.HomePresenter;
 import com.example.aklah.Home.Presenter.HomePresenterImp;
 import com.example.aklah.Home.View.HomeView;
 import com.example.aklah.Home.View.HomeFragmentDirections;
+import com.example.aklah.InternetCheckTask;
 import com.example.aklah.MainActivity;
 import com.example.aklah.Model.Database.MealLocalDataSourceImp;
 import com.example.aklah.Model.Meal;
@@ -38,13 +41,19 @@ import com.example.aklah.SignIn.View.Signin;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Objects;
 
 
 public class HomeFragment extends Fragment implements HomeView {
 
-
+    ImageView sticker;
+    TextView network;
 ImageView mealOfTheDayImageView;
 TextView mealOfTheDayNameTextView;
 CardView cardView;
@@ -54,10 +63,13 @@ ImageView profileImage;
 TextView profileNameText;
 Button signOutBtn;
 HomePresenter homePresenter;
+int guest;
     SharedPreferences sp;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sp = getActivity().getSharedPreferences("myapp",0);
+        guest = sp.getInt("guest",0);
     }
 
     @Override
@@ -70,27 +82,60 @@ HomePresenter homePresenter;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        profileCard=view.findViewById(R.id.profile_card_view);
+        if (guest==1){
+            profileCard.setVisibility(View.GONE);
+        }
+        sticker=view.findViewById(R.id.imageView3);
+        network=view.findViewById(R.id.textView5);
+
         mealOfTheDayImageView= view.findViewById(R.id.imageView);
         mealOfTheDayNameTextView=view.findViewById(R.id.mealOfDayNameText);
         cardView=view.findViewById(R.id.cardView);
-        profileCard=view.findViewById(R.id.profile_card_view);
+        InternetCheckTask internetCheckTask = new InternetCheckTask(new InternetCheckTask.InternetCheckListener() {
+            @Override
+            public void onInternetCheckResult(boolean isInternetAvailable) {
+                if (!isInternetAvailable){
+                    profileCard.setVisibility(View.GONE);
+                    cardView.setVisibility(View.GONE);
+                    TextView t = view.findViewById(R.id.mealOfTheDayText);
+                    t.setVisibility(View.GONE);
+                    sticker.setVisibility(View.VISIBLE);
+                    network.setVisibility(View.VISIBLE);
+                }
+
+            }
+        });
+
+        internetCheckTask.execute();
+
+//        if (!connectionCheck()){
+//            profileCard.setVisibility(View.GONE);
+//            cardView.setVisibility(View.GONE);
+//            TextView t = view.findViewById(R.id.mealOfTheDayText);
+//            t.setVisibility(View.GONE);
+//            sticker.setVisibility(View.VISIBLE);
+//            network.setVisibility(View.VISIBLE);
+//
+//        }
         profileImage=view.findViewById(R.id.profile_img);
         profileNameText=view.findViewById(R.id.profile_name);
         signOutBtn=view.findViewById(R.id.sign_out);
 
-        sp = getActivity().getSharedPreferences("myapp",0);
-        int guest = sp.getInt("guest",0);
-        if (guest==1){
-            profileCard.setVisibility(View.GONE);
-        }
+
+
 
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user!=null){
-            if (user.getDisplayName()!=null){
-                    profileNameText.setText(user.getDisplayName());
+            Log.i("Profile", "onViewCreated: ");
+            if (!user.getDisplayName().equals("")){
+                Log.i("Profile", "onViewCreated: "+user.getEmail());
+                profileNameText.setText(user.getDisplayName());
             }else {
+                Log.i("Profile", "onViewCreated: "+user.getEmail());
                 profileNameText.setText(user.getEmail());
+               // profileNameText.setVisibility(View.GONE);
             }
             if (user.getPhotoUrl()!=null){
                 Glide.with(getActivity()).load(user.getPhotoUrl()).apply(new RequestOptions().override(1000,1000)).into(profileImage);
@@ -134,7 +179,6 @@ HomePresenter homePresenter;
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 HomeFragmentDirections.ActionHomeFragmentToMealInfoFragment action = HomeFragmentDirections.actionHomeFragmentToMealInfoFragment();
                 action.setMealID(meal.getIdMeal());
                 Navigation.findNavController(view).navigate(action);
@@ -167,12 +211,12 @@ HomePresenter homePresenter;
     public void showErrorMsg(String error) {
 
     }
-    boolean connectionCheck(){
-        if (NetworkIsConnected()&&InternetIsConnected()){
-            return true;
-        }
-        return false;
-    }
+//    boolean connectionCheck(){
+//        if (NetworkIsConnected()&&InternetIsConnected()){
+//            return true;
+//        }
+//        return false;
+//    }
     private boolean NetworkIsConnected() {
         ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null;

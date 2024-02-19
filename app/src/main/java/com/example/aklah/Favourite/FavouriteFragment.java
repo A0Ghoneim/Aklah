@@ -16,12 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.aklah.Adapters.FavouriteAdapter;
 import com.example.aklah.Adapters.OnFavouriteClickListener;
 import com.example.aklah.Favourite.Presenter.FavouritePresenter;
 import com.example.aklah.Favourite.Presenter.FavouritePresenterImp;
 import com.example.aklah.Model.Database.MealLocalDataSourceImp;
 import com.example.aklah.Model.Meal;
-import com.example.aklah.Model.MealRepository;
 import com.example.aklah.Model.MealRepositoryImp;
 import com.example.aklah.Network.MealRemoteDataSourceImp;
 import com.example.aklah.R;

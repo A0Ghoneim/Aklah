@@ -2,12 +2,14 @@ package com.example.aklah.Search.View;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,17 +26,25 @@ import com.example.aklah.Adapters.CategoryAdapter;
 import com.example.aklah.Adapters.CountryAdapter;
 import com.example.aklah.Adapters.IngredientAdapter;
 import com.example.aklah.Adapters.MealAdapter;
+import com.example.aklah.InternetCheckTask;
 import com.example.aklah.Model.Category;
 import com.example.aklah.Model.Country;
 import com.example.aklah.Model.Database.MealLocalDataSourceImp;
 import com.example.aklah.Model.Ingredient;
 import com.example.aklah.Model.Meal;
 import com.example.aklah.Model.MealRepositoryImp;
+import com.example.aklah.Model.PojoCountry;
+import com.example.aklah.Model.PojoIng;
 import com.example.aklah.Network.MealRemoteDataSourceImp;
 import com.example.aklah.R;
 import com.example.aklah.Search.Presenter.SearchPresenter;
 import com.example.aklah.Search.Presenter.SearchPresenterImp;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 
@@ -55,13 +65,18 @@ public class SearchFragment extends Fragment implements MySearchView {
     MealAdapter mealAdapter;
     ArrayList<Meal> allMealslist;
 
+    PojoCountry pojoCountry;
+    PojoIng pojoIng;
+
     RecyclerView ingredientRecyclerView;
+
+    TextView allCountriesText;
+    TextView allIngredientsText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         allMealslist=new ArrayList<>();
-
     }
 
     @Override
@@ -85,14 +100,48 @@ public class SearchFragment extends Fragment implements MySearchView {
         categoryRecyclerView=view.findViewById(R.id.recyclerView);
         countryRecyclerView=view.findViewById(R.id.recycler_countries);
         ingredientRecyclerView =view.findViewById(R.id.ingredients_recycler);
+        allCountriesText=view.findViewById(R.id.allCountriesText);
+        allIngredientsText=view.findViewById(R.id.allIngredientsText);
+        InternetCheckTask internetCheckTask = new InternetCheckTask(new InternetCheckTask.InternetCheckListener() {
+            @Override
+            public void onInternetCheckResult(boolean isInternetAvailable) {
+                if (!isInternetAvailable) {
+                    scrollView.setVisibility(View.GONE);
+                    searchView.setVisibility(View.GONE);
+                    sticker.setVisibility(View.VISIBLE);
+                    network.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        internetCheckTask.execute();
 
 
-        if (!connectionCheck()){
-            scrollView.setVisibility(View.GONE);
-            searchView.setVisibility(View.GONE);
-            sticker.setVisibility(View.VISIBLE);
-            network.setVisibility(View.VISIBLE);
-        }
+        allCountriesText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SearchFragmentDirections.ActionSearchFragmentToCountrySearchFragment action = SearchFragmentDirections.actionSearchFragmentToCountrySearchFragment();
+                action.setAllCountries(pojoCountry);
+                Navigation.findNavController(v).navigate(action);
+            }
+        });
+
+        allIngredientsText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SearchFragmentDirections.ActionSearchFragmentToIngredientSearchFragment action = SearchFragmentDirections.actionSearchFragmentToIngredientSearchFragment();
+                action.setAllIngredients(pojoIng);
+                Navigation.findNavController(v).navigate(action);
+            }
+        });
+
+
+//        if (!connectionCheck()){
+//            scrollView.setVisibility(View.GONE);
+//            searchView.setVisibility(View.GONE);
+//            sticker.setVisibility(View.VISIBLE);
+//            network.setVisibility(View.VISIBLE);
+//        }
 
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -165,19 +214,22 @@ public class SearchFragment extends Fragment implements MySearchView {
 
     @Override
     public void getCountries(ArrayList<Country> countries) {
+        pojoCountry=new PojoCountry(countries);
         ArrayList<Country> codedCountries = addcodes(countries);
         codedCountries.removeIf(country -> country.getStrArea().equals("Unknown"));
         ArrayList<Country> countrySample = new ArrayList<>(codedCountries.subList(0,10));
-        CountryAdapter countryAdapter = new CountryAdapter(getActivity(),countrySample);
+        CountryAdapter countryAdapter = new CountryAdapter(getActivity(),countrySample,R.layout.country_list_row,CountryAdapter.FRAGMENT_SEARCH);
         countryRecyclerView.setAdapter(countryAdapter);
+        allCountriesText.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void getIngredients(ArrayList<Ingredient> ingredients) {
+        pojoIng=new PojoIng(ingredients);
         ArrayList<Ingredient> ingredientsSample = new ArrayList<>(ingredients.subList(0,10));
-        IngredientAdapter ingredientAdapter = new IngredientAdapter(getActivity(),ingredientsSample);
+        IngredientAdapter ingredientAdapter = new IngredientAdapter(getActivity(),ingredientsSample,R.layout.ingredient_list_row,IngredientAdapter.FRAGMENT_SEARCH);
         ingredientRecyclerView.setAdapter(ingredientAdapter);
-
+        allIngredientsText.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -286,13 +338,12 @@ public class SearchFragment extends Fragment implements MySearchView {
         return countries;
     }
 
-
-    boolean connectionCheck(){
-        if (NetworkIsConnected()&&InternetIsConnected()){
-            return true;
-        }
-        return false;
-    }
+//    boolean connectionCheck(){
+//        if (NetworkIsConnected()&&InternetIsConnected()){
+//            return true;
+//        }
+//        return false;
+//    }
     private boolean NetworkIsConnected() {
         ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null;

@@ -162,6 +162,11 @@ public class Signin extends AppCompatActivity {
             public void onClick(View view) {
                 String email =editText.getText().toString();
                 String password = passEdit.getText().toString();
+                if (email.equals("")||password.equals("")){
+                    Log.i("NULLLL", "onClick: ");
+                    Toast.makeText(Signin.this, "Enter a valid email or passord", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 //FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,password);
                 FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -209,7 +214,7 @@ public class Signin extends AppCompatActivity {
                             navigateToOtherActivity(0);
                         }
                         else {
-                            Toast.makeText(Signin.this, "check password", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Signin.this, "Failed to sign in\n"+"check email and password", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
