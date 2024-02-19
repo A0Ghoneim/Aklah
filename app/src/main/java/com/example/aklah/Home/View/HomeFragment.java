@@ -129,7 +129,7 @@ int guest;
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user!=null){
             Log.i("Profile", "onViewCreated: ");
-            if (!user.getDisplayName().equals("")){
+            if (user.getDisplayName()!=null&&!user.getDisplayName().equals("")){
                 Log.i("Profile", "onViewCreated: "+user.getEmail());
                 profileNameText.setText(user.getDisplayName());
             }else {

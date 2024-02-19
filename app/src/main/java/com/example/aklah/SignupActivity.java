@@ -54,6 +54,7 @@ public class SignupActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        Log.e("TAG", "onFailure: ", e);
                         Toast.makeText(SignupActivity.this, "Failed to register\n"+"Check your internet connectivity and make sure you enter a valid email account", Toast.LENGTH_LONG).show();
                     }
                 });
