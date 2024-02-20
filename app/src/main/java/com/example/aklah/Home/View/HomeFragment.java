@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.Navigation;
 
 import android.preference.PreferenceManager;
@@ -191,7 +192,9 @@ int guest;
 
     @Override
     public void showStoredMeal(Meal meal) {
-        Glide.with(requireActivity()).load(meal.getStrMealThumb()).apply(new RequestOptions().override(500,500)).into(mealOfTheDayImageView);
+        if (getActivity()!=null) {
+            Glide.with(requireActivity()).load(meal.getStrMealThumb()).apply(new RequestOptions().override(500, 500)).into(mealOfTheDayImageView);
+        }
         mealOfTheDayNameTextView.setText(meal.getStrMeal());
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,5 +231,12 @@ int guest;
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
     }
 }

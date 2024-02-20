@@ -47,6 +47,8 @@ import com.example.aklah.Model.MealRepositoryImp;
 import com.example.aklah.Network.MealRemoteDataSourceImp;
 import com.example.aklah.R;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -99,6 +101,7 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
     Meal sentMeal;
 
     RecyclerView recyclerView;
+    String mealid;
     private Object lock = new Object();
 
     @Override
@@ -110,10 +113,13 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
 
         Log.i("info", "onCreate: ");
         presenter=new MealInfoPresenterImp(this, MealRepositoryImp.getInstance(MealRemoteDataSourceImp.getInstance(), MealLocalDataSourceImp.getInstance(getActivity())));
-        String mealid = MealInfoFragmentArgs.fromBundle(getArguments()).getMealID();
+         mealid = MealInfoFragmentArgs.fromBundle(getArguments()).getMealID();
         sentMeal = MealInfoFragmentArgs.fromBundle(getArguments()).getMealData();
         if (sentMeal!=null){
-
+            meal=sentMeal;
+            recipeIngredients =new ArrayList<>();
+            recipeMeasures = new ArrayList<>();
+            ingredientsToList();
         }
         else {
             presenter.getMeal(mealid);
@@ -144,10 +150,12 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
         recyclerView = view.findViewById(R.id.recycle);
         if (sentMeal!=null){
         webView.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.GONE);
+       // recyclerView.setVisibility(View.GONE);
 
         mealTextView.setText(sentMeal.getStrMeal());
         describtionTextView.setText(sentMeal.getStrInstructions());
+            RecipeAdapter recipeAdapter = new RecipeAdapter(getActivity(),recipeIngredients,recipeMeasures);
+            recyclerView.setAdapter(recipeAdapter);
 
         }
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -155,13 +163,33 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
         recyclerView.setLayoutManager(linearLayoutManager);
 
 
-
-
-
-
-
-
          addbtn = view.findViewById(R.id.addtofavbtn);
+       // addbtn.setImageResource(R.drawable.favorite_fill1_wght400_grad0_opsz24);
+
+
+        if (mealid!=null) {
+            presenter.getMealbyid(mealid+"10").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<Meal>() {
+                 @Override
+                 public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+                     Log.i("FAV", "onSubscribe: ");
+                 }
+
+                 @Override
+                 public void onSuccess(@io.reactivex.rxjava3.annotations.NonNull Meal meal) {
+                     Log.i("FAV", "onSuccess: "+meal.getStrMeal());
+                            if (meal.isFavourite()){
+                                addbtn.setImageResource(R.drawable.favorite_fill1_wght400_grad0_opsz24);
+                            }
+                 }
+
+                 @Override
+                 public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+                     Log.e("FAV", "onError: ", e);
+                 }
+             });
+         }
+
+
          schedulebtn=view.findViewById(R.id.scheduleButton);
          planbtn=view.findViewById(R.id.planbtn);
 
@@ -170,7 +198,7 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
 
     @Override
     public void showMeal(Meal meal) {
-        presenter.getMealbyid(meal.getIdMeal()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<Meal>() {
+       /* presenter.getMealbyid(meal.getIdMeal()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<Meal>() {
             @Override
             public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
 
@@ -185,7 +213,7 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
             public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
 
             }
-        });
+        });*/
       //  addbtn.setImageResource(R.drawable.baseline_home_24);
         Log.i("TAG", "showMeal: "+meal.getStrMeal());
         this.meal=meal;
@@ -285,38 +313,40 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
             @Override
             public void onClick(View v) {
                 synchronized (lock) {
-                    addbtn.setImageResource(R.drawable.favorite_fill1_wght400_grad0_opsz24);
-                    meal.setFavourite(true);
-                    if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                        dbRefrence = dbInstance.getReference("Users");
+                    if (addbtn.getDrawable().getConstantState() == getResources().getDrawable( R.drawable.favorite_fill0_wght400_grad0_opsz24).getConstantState())
+                    {
+                        meal.setFavourite(true);
+                        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                            dbRefrence = dbInstance.getReference("Users");
 
-                        String s = meal.getIdMeal() + "" + "1" + "0";
-                        meal.setMyid(Integer.parseInt(s));
-                        dbRefrence.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(Integer.toString(meal.getMyid())).setValue(meal).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(getActivity(), "added to firebase", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                    Completable completable = presenter.saveMeal(meal);
-                    completable.subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new CompletableObserver() {
+                            String s = meal.getIdMeal() + "" + "1" + "0";
+                            meal.setMyid(Integer.parseInt(s));
+                            dbRefrence.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(Integer.toString(meal.getMyid())).setValue(meal).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
-                                public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
-
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Toast.makeText(getActivity(), "added to firebase", Toast.LENGTH_SHORT).show();
                                 }
+                            });
+                        }
+                        Completable completable = presenter.saveMeal(meal);
+                        completable.subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new CompletableObserver() {
+                                    @Override
+                                    public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
 
-                                @Override
-                                public void onComplete() {
-                                    Toast.makeText(getActivity(), "Added Successfully", Toast.LENGTH_SHORT).show();
-                                }
+                                    }
 
-                                @Override
-                                public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
-                                    //   if (e.getLocalizedMessage())
-                                    Single<Meal> flowable = presenter.getMealbyid(meal.getIdMeal());
+                                    @Override
+                                    public void onComplete() {
+                                        addbtn.setImageResource(R.drawable.favorite_fill1_wght400_grad0_opsz24);
+                                        Toast.makeText(getActivity(), "Added Successfully", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+                                        //   if (e.getLocalizedMessage())
+                              /*      Single<Meal> flowable = presenter.getMealbyid(meal.getIdMeal());
                                     flowable.subscribeOn(Schedulers.io())
                                             .observeOn(AndroidSchedulers.mainThread())
                                             .subscribe(new SingleObserver<Meal>() {
@@ -334,10 +364,34 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
                                                 public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
                                                     Toast.makeText(getActivity(), "Failed to Add", Toast.LENGTH_SHORT).show();
                                                 }
-                                            });
+                                            });*/
 
+                                    }
+                                });
+                    }
+                    else
+                    {
+                        String dd = meal.getIdMeal()+"10";
+                        meal.setMyid(Integer.parseInt(dd));
+                        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+                            dbRefrence = dbInstance.getReference("Users");
+                            dbRefrence.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(Integer.toString(meal.getMyid())).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    addbtn.setImageResource(R.drawable.favorite_fill0_wght400_grad0_opsz24);
+                                    Toast.makeText(getActivity(), "firebase delete", Toast.LENGTH_SHORT).show();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getActivity(), "firebase fail to delete", Toast.LENGTH_SHORT).show();
                                 }
                             });
+                        }
+                        presenter.deleteMeal(meal);
+
+                    }
+
                 }
             }});
         RecipeAdapter recipeAdapter = new RecipeAdapter(getActivity(),recipeIngredients,recipeMeasures);

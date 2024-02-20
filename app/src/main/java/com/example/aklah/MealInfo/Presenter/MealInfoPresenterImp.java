@@ -40,6 +40,11 @@ public class MealInfoPresenterImp implements MealInfoPresenter, MealNetworkCallb
     }
 
     @Override
+    public void deleteMeal(Meal meal) {
+        repo.deleteMeal(meal);
+    }
+
+    @Override
     public void onSuccessResult(ArrayList<Meal> meals) {
         Log.i("TAG", "onSuccessResult: "+meals.size());
         view.showMeal(meals.get(0));

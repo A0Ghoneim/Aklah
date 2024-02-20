@@ -204,9 +204,9 @@ public class SearchFragment extends Fragment implements MySearchView {
     public void getCategories(ArrayList<Category> categories) {
        // ArrayList<Category> categoriesSample = new ArrayList<>(categories.subList(0,8));
         //categoriesSample.add(new Category("99","View More","aaa"));
-        final float scale = getContext().getResources().getDisplayMetrics().density;
+       /* final float scale = getContext().getResources().getDisplayMetrics().density;
         int hpixels = (int) (50*categories.size() * scale + 0.5f);
-        int wpixels = (int) (390 * scale + 0.5f);
+        int wpixels = (int) (390 * scale + 0.5f);*/
        // categoryRecyclerView.setLayoutParams(new RecyclerView.LayoutParams(wpixels,hpixels));
         CategoryAdapter categoryAdapter = new CategoryAdapter(getActivity(),categories,CategoryAdapter.SAMPLE,R.layout.category_list_row,CategoryAdapter.FRAGMENT_SEARCH);
         categoryRecyclerView.setAdapter(categoryAdapter);

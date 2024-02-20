@@ -100,7 +100,7 @@ public class FavouriteFragment extends Fragment implements FavouriteView, OnFavo
     public void setFavouritesFlowable(Flowable<List<Meal>> flowable) {
             flowable.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(prolist -> {meals=new ArrayList<>(prolist); favouriteAdapter.setMeals(meals); favouriteAdapter.notifyDataSetChanged();});
+                    .subscribe(prolist -> {meals=new ArrayList<>(prolist); favouriteAdapter.setMeals(meals); favouriteAdapter.notifyDataSetChanged();},throwable -> Log.e("SEARCH", "setFavouritesFlowable: ",throwable));
     }
 
     @Override

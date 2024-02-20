@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -161,7 +162,7 @@ public class ScheduleFragment extends Fragment implements ScheduleView, OnFavour
     public void setSaturdayFlowable(Flowable<List<Meal>> flowable) {
         flowable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(meals -> {satmeals=new ArrayList<>(meals); satAdapter.setMeals(satmeals); satAdapter.notifyDataSetChanged(); });
+                .subscribe(meals -> {satmeals=new ArrayList<>(meals); satAdapter.setMeals(satmeals); satAdapter.notifyDataSetChanged(); },throwable -> Log.e("TAG", "setSaturdayFlowable: ",throwable ));
     }
 
     @Override

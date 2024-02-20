@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (navDestination.getId() == R.id.homeFragment){
                     bottomNavigationView.setSelectedItemId(R.id.page_1);
+                   // navController.popBackStack(null,1);
 
                 } else if (navDestination.getId() == R.id.searchFragment) {
                     bottomNavigationView.setSelectedItemId(R.id.page_2);

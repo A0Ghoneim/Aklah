@@ -1,6 +1,7 @@
 package com.example.aklah.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,11 +9,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.aklah.InternetCheckTask;
 import com.example.aklah.R;
 
 import java.util.ArrayList;
@@ -67,6 +70,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<
         public TextView nameView;
         public TextView descriptionView;
         public ImageView imageView;
+
+        CardView imgCard;
         public ConstraintLayout constraintLayout;
         public View layout;
 
@@ -75,8 +80,23 @@ public class RecipeAdapter extends RecyclerView.Adapter<
             layout=itemView;
             nameView = itemView.findViewById(R.id.nameText);
             imageView = itemView.findViewById(R.id.imageView);
+            imgCard=itemView.findViewById(R.id.img_card);
             constraintLayout= itemView.findViewById(R.id.constraintView);
+            InternetCheckTask internetCheckTask = new InternetCheckTask(new InternetCheckTask.InternetCheckListener() {
+                @Override
+                public void onInternetCheckResult(boolean isInternetAvailable) {
+                    if (!isInternetAvailable){
+                        Log.i("Inter", "onInternetCheckResult: "+"Hoowwww");
+                        imgCard.setVisibility(View.GONE);
+                    }
+                    else {
+                        Log.i("Inter", "onInternetCheckResult: "+"en avahbjkgj");
+                    }
+                }
+            });
+            internetCheckTask.execute();
 
-        }
+
+            }
     }
 }

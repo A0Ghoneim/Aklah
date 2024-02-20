@@ -123,8 +123,10 @@ Observable<Meal> observable;
     }
 
     @Override
-    public void showAllMeals(ArrayList<Meal> meals) {
-        this.meals = meals;
+    public void showAllMeals(ArrayList<Meal> mealss) {
+        if (meals==null){meals=new ArrayList<>();}
+        if (mealss!=null){this.meals = mealss;}
+        if (mealAdapter==null){        mealAdapter = new MealAdapter(getActivity(),meals,MealAdapter.FRAGMENT_MEAL_SEARCH);}
          mealAdapter.setMeals(meals);
          mealAdapter.notifyDataSetChanged();
         observable = Observable.fromIterable(meals);

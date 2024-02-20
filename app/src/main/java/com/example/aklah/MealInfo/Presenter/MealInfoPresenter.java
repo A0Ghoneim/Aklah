@@ -15,4 +15,6 @@ public interface MealInfoPresenter {
 
     Completable saveMeal(Meal meal);
 
+    void deleteMeal(Meal meal);
+
 }
