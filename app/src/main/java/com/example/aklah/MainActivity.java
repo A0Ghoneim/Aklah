@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
+import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
@@ -88,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (navDestination.getId() == R.id.homeFragment){
                     bottomNavigationView.setSelectedItemId(R.id.page_1);
-                   // navController.popBackStack(null,1);
 
                 } else if (navDestination.getId() == R.id.searchFragment) {
                     bottomNavigationView.setSelectedItemId(R.id.page_2);

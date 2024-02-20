@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">أكلة</string>
+    <string name="hello_blank_fragment">مرحبًا، قطعة فارغة</string>
+    <string name="home">الرئيسية</string>
+    <string name="search">البحث</string>
+    <string name="schedule">الجدول</string>
+    <string name="favourite">المفضلة</string>
+    <string name="mealOfTheDay">وجبة اليوم</string>
+    <string name="recipr">وصفة</string>
+    <string name="ingredients">المكونات</string>
+    <string name="categories">التصنيفات</string>
+    <string name="countries">البلدان</string>
+    <string name="add_to_favourites">إضافة إلى المفضلة</string>
+    <string name="your_plan">خطتك</string>
+    <string name="monday">الاثنين</string>
+    <string name="saturday">السبت</string>
+    <string name="sunday">الأحد</string>
+    <string name="tuesday">الثلاثاء</string>
+    <string name="wednesday">الأربعاء</string>
+    <string name="thursday">الخميس</string>
+    <string name="friday">الجمعة</string>
+    <string name="facebook_app_id">1234</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">56789</string>
+    <string name="sign_in">تسجيل الدخول</string>
+    <string name="sign_up">التسجيل</string>
+    <string name="don_t_have_an_account">ليس لديك حساب؟</string>
+    <string name="or_sign_in_with">أو سجل الدخول باستخدام</string>
+    <string name="sign_out">تسجيل الخروج</string>
+    <string name="cuisines">الأطباق</string>
+    <string name="view_all_Cuisines">عرض جميع الأطباق →</string>
+    <string name="view_all_ingredients">عرض جميع المكونات →</string>
+    <string name="search_categories">البحث في التصنيفات...</string>
+    <string name="search_cuisines">البحث في الأطباق...</string>
+    <string name="guest_mode_msg">قم بتسجيل الدخول لاستخدام هذه الميزة</string>
+    <string name="search_ingredients">البحث في المكونات...</string>
+    <string name="search_meal">البحث عن وجبة...</string>
+    <string name="enter_email">ادخل البريد الالكترونى</string>
+    <string name="Sign_in_to_continue">سجل دخول للاستمرار</string>
+    <string name="enter_password">أدخل الرقم السرى</string>
+    <string name="continue_guest">المتابعه مؤقتأ</string>
+    <string name="Sign_Up_to_continue">انشاء حساب للمتابعه</string>
+    <string name="Network_Connection_is_down">تعذر الاتصال بالانترنت</string>
+</resources>

@@ -119,7 +119,6 @@ Observable<Meal> observable;
                 return true;
             }
         });
-
     }
 
     @Override

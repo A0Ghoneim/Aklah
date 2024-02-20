@@ -16,7 +16,7 @@
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
-        android:hint="Enter Email"
+        android:hint="@string/enter_email"
         app:layout_constraintEnd_toEndOf="@+id/cardView2"
         app:layout_constraintStart_toStartOf="@+id/cardView2"
         app:layout_constraintTop_toBottomOf="@+id/cardView2">
@@ -39,7 +39,7 @@
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:hint="Enter Password"
+        android:hint="@string/enter_password"
         app:layout_constraintStart_toStartOf="@+id/emailTextField"
         app:layout_constraintTop_toBottomOf="@+id/emailTextField">
 
@@ -137,7 +137,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
-                android:text="Sign in to continue"
+                android:text="@string/Sign_in_to_continue"
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="@+id/textView8"
@@ -151,7 +151,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="Continue as a guest ?"
+        android:text="@string/continue_guest"
         android:textColor="@color/leaf_green"
         android:textSize="16sp"
         android:textStyle="bold|italic"

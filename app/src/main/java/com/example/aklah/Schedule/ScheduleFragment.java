@@ -169,42 +169,42 @@ public class ScheduleFragment extends Fragment implements ScheduleView, OnFavour
     public void setSundayFlowable(Flowable<List<Meal>> flowable) {
         flowable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(meals -> {sunmeals=new ArrayList<>(meals); sunAdapter.setMeals(sunmeals); sunAdapter.notifyDataSetChanged(); });
+                .subscribe(meals -> {sunmeals=new ArrayList<>(meals); sunAdapter.setMeals(sunmeals); sunAdapter.notifyDataSetChanged(); },throwable -> Log.e("TAG", "setSaturdayFlowable: ",throwable ));
     }
 
     @Override
     public void setMondayFlowable(Flowable<List<Meal>> flowable) {
         flowable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(meals -> {monmeals=new ArrayList<>(meals); monAdapter.setMeals(monmeals); monAdapter.notifyDataSetChanged(); });
+                .subscribe(meals -> {monmeals=new ArrayList<>(meals); monAdapter.setMeals(monmeals); monAdapter.notifyDataSetChanged(); },throwable -> Log.e("TAG", "setSaturdayFlowable: ",throwable ));
     }
 
     @Override
     public void setTuesdayFlowable(Flowable<List<Meal>> flowable) {
         flowable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(meals -> {tuemeals=new ArrayList<>(meals); tueAdapter.setMeals(tuemeals); tueAdapter.notifyDataSetChanged(); });
+                .subscribe(meals -> {tuemeals=new ArrayList<>(meals); tueAdapter.setMeals(tuemeals); tueAdapter.notifyDataSetChanged(); },throwable -> Log.e("TAG", "setSaturdayFlowable: ",throwable ));
     }
 
     @Override
     public void setWednesdayFlowable(Flowable<List<Meal>> flowable) {
         flowable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(meals -> {wedmeals=new ArrayList<>(meals); wedAdapter.setMeals(wedmeals); wedAdapter.notifyDataSetChanged(); });
+                .subscribe(meals -> {wedmeals=new ArrayList<>(meals); wedAdapter.setMeals(wedmeals); wedAdapter.notifyDataSetChanged(); },throwable -> Log.e("TAG", "setSaturdayFlowable: ",throwable ));
     }
 
     @Override
     public void setThursdayFlowable(Flowable<List<Meal>> flowable) {
         flowable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(meals -> {thumeals=new ArrayList<>(meals); thuAdapter.setMeals(thumeals); thuAdapter.notifyDataSetChanged(); });
+                .subscribe(meals -> {thumeals=new ArrayList<>(meals); thuAdapter.setMeals(thumeals); thuAdapter.notifyDataSetChanged(); },throwable -> Log.e("TAG", "setSaturdayFlowable: ",throwable ));
     }
 
     @Override
     public void setFridayFlowable(Flowable<List<Meal>> flowable) {
         flowable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(meals -> {frimeals=new ArrayList<>(meals); friAdapter.setMeals(frimeals); friAdapter.notifyDataSetChanged(); });
+                .subscribe(meals -> {frimeals=new ArrayList<>(meals); friAdapter.setMeals(frimeals); friAdapter.notifyDataSetChanged(); },throwable -> Log.e("TAG", "setSaturdayFlowable: ",throwable ));
     }
 
     @Override
