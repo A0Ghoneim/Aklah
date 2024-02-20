@@ -1,3 +1,45 @@
 <resources>
     <string name="app_name">Aklah</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home">home</string>
+    <string name="search">search</string>
+    <string name="schedule">schedule</string>
+    <string name="favourite">favourite</string>
+    <string name="mealOfTheDay">Meal of the day</string>
+    <string name="recipr">Recipe</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="categories">Categories</string>
+    <string name="countries">Countries</string>
+    <string name="add_to_favourites">Add to Favourites</string>
+    <string name="your_plan">Your Plan</string>
+    <string name="monday">Monday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="facebook_app_id">1234</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">56789</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign UP</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="or_sign_in_with">OR  Sign in with</string>
+    <string name="sign_out">Sign out</string>
+    <string name="cuisines">Cuisines</string>
+    <string name="view_all_Cuisines">View All Cuisines →</string>
+    <string name="view_all_ingredients">View All ingredients →</string>
+    <string name="search_categories">search categories...</string>
+    <string name="search_cuisines">search cuisines...</string>
+    <string name="guest_mode_msg">Login to use this feature</string>
+    <string name="search_ingredients">search ingredients...</string>
+    <string name="search_meal">search meal...</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="Sign_in_to_continue">Sign in to continue</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="continue_guest">Continue as a guest ?</string>
+    <string name="Sign_Up_to_continue">Sign Up to continue</string>
+    <string name="Network_Connection_is_down">Network Connection is down</string>
 </resources>

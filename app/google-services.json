@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "327620158837",
+    "project_id": "aklah-3ba8e",
+    "storage_bucket": "aklah-3ba8e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:327620158837:android:e80c0a6677d5055750df3c",
+        "android_client_info": {
+          "package_name": "com.example.aklah"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "327620158837-fmo88bghgj5211aojlu8t6tjk1najuhl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.aklah",
+            "certificate_hash": "992d3e4f3bc3e4703a3eada60b04a6a956619337"
+          }
+        },
+        {
+          "client_id": "327620158837-0nr2sggponegd2anv6na75bg9rvrd7ut.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAu7PMNxcZ03jTQqe7Yu4YqvvwxlhYGUig"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "327620158837-0nr2sggponegd2anv6na75bg9rvrd7ut.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
