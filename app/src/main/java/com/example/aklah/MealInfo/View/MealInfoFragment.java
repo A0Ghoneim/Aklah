@@ -286,7 +286,7 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
 
                                         @Override
                                         public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
-                                            Toast.makeText(getActivity(), "Failed to add", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(), "Already added", Toast.LENGTH_SHORT).show();
                                         }
                                     });
                             return true;
@@ -324,7 +324,7 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
                             dbRefrence.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(Integer.toString(meal.getMyid())).setValue(meal).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    Toast.makeText(getActivity(), "added to firebase", Toast.LENGTH_SHORT).show();
+                                   // Toast.makeText(getActivity(), "added to firebase", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -379,12 +379,12 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
                                 @Override
                                 public void onSuccess(Void unused) {
                                     addbtn.setImageResource(R.drawable.favorite_fill0_wght400_grad0_opsz24);
-                                    Toast.makeText(getActivity(), "firebase delete", Toast.LENGTH_SHORT).show();
+                                   // Toast.makeText(getActivity(), "firebase delete", Toast.LENGTH_SHORT).show();
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getActivity(), "firebase fail to delete", Toast.LENGTH_SHORT).show();
+                                   // Toast.makeText(getActivity(), "firebase fail to delete", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -403,7 +403,7 @@ public class MealInfoFragment extends Fragment implements MealInfoView {
 
     @Override
     public void showerroe(String errormsg) {
-        Toast.makeText(getActivity(),"eertyuiop;lkjhgfd",Toast.LENGTH_LONG).show();
+       // Toast.makeText(getActivity(),"eertyuiop;lkjhgfd",Toast.LENGTH_LONG).show();
     }
 
     private void showDatePickerDialog(Meal meal) {
