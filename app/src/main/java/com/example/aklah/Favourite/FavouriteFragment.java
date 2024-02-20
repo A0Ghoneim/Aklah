@@ -110,12 +110,12 @@ public class FavouriteFragment extends Fragment implements FavouriteView, OnFavo
             dbRefrence.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(Integer.toString(meal.getMyid())).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
-                    Toast.makeText(getActivity(), "firebase delete", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getActivity(), "firebase delete", Toast.LENGTH_SHORT).show();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getActivity(), "firebase fail to delete", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(), "firebase fail to delete", Toast.LENGTH_SHORT).show();
                 }
             });
         }
